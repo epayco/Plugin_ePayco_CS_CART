@@ -1,7 +1,6 @@
-# PayU plugin for Prestashop since 1.4.4
-``This plugin is released under the GPL license.``
+# ePayco plugin for cs-cart since 4.3.8
 
-**If you have any questions or issues, feel free to contact our technical support: tech@payu.pl.**
+**If you have any questions or issues, feel free to contact our technical support: desarrollo@payco.co.**
 
 
 ## Table of Contents
