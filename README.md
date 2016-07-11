@@ -12,7 +12,7 @@
 * [Configuration](#configuration)
 
 ## Features
-The PayU payments Prestashop plugin adds the PayU payment option and enables you to process the following operations in your e-shop:
+The ePayco payments Prestashop plugin adds the ePayco payment option and enables you to process the following operations in your e-shop:
 
 * Creating a payment order (with discounts included)
 * Cancelling a payment order
@@ -33,18 +33,18 @@ The following PHP extensions are required:
 
 ### Option 1 - recommended for users without FTP access to their PrestShop installation
 
-1. Download plugin from [the plugin repository](https://github.com/PayU/plugin_prestashop) to local directory as zip.
+1. Download plugin from [the plugin repository](https://github.com/ePayco/plugin_prestashop) to local directory as zip.
 2. Unzip locally downloaded file
-3. **Create zip archive of payu directory**
+3. **Create zip archive of ePayco directory**
 4. Go to the PrestaShop administration page [http://your-prestashop-url/admin].
 5. Go to **Modules** > **Modules**.
 6. **Add new module** and point archive contained plugin (created at point 3)
 7. Load the plugin
 
 ### Option 2 - recommended for users with FTP access to their PrestaShop installation
-1. Download plugin from [the plugin repository](https://github.com/PayU/plugin_prestashop) to local directory as zip.
+1. Download plugin from [the plugin repository](https://github.com/ePayco/plugin_prestashop) to local directory as zip.
 2. Unzip locally downloaded file
-3. Upload **'payu'** directory from your computer to **'modules'** catalog of your PrestaShop installation.
+3. Upload **'ePayco'** directory from your computer to **'modules'** catalog of your PrestaShop installation.
 
 ## Upgrade
 
@@ -57,7 +57,7 @@ To configure the PrestaShop plugin:
 
 1. Go to the PrestaShop administration page [http://your-prestashop-url/admin].
 2. Go to **Modules** > **Payments & Gateways**.
-3. Select **PayU** and click **Configure**.
+3. Select **ePayco** and click **Configure**.
 
 
 ### Configuration Parameters
@@ -69,7 +69,7 @@ Works only Prestashop 1.5 and 1.6
 
 | Parameter | Description | 
 |:---------:|:-----------:|
-|Payment methods displayed on Presta checkout summary page|If "No" then Prestashop will redirect to PayU payment page|
+|Payment methods displayed on Presta checkout summary page|If "No" then Prestashop will redirect to ePayco payment page|
 
 
 #### POS Parameters
@@ -89,7 +89,7 @@ Presta:
 
 ![presta_pos_config][img1]
 
-POS configuration in PayU merchant panel:
+POS configuration in ePayco merchant panel:
 
 ![pos_configuration_keys][img2]
 
@@ -100,5 +100,5 @@ POS configuration in PayU merchant panel:
 [ext2]: http://php.net/manual/en/book.hash.php
 
 <!--images:-->
-[img1]: https://raw.github.com/PayU/plugin_prestashop/master/readme_images/presta_pos_config.png
-[img2]: https://raw.github.com/PayU/plugin_prestashop/master/readme_images/pos_configuration_keys.png
+[img1]: https://raw.github.com/ePayco/plugin_prestashop/master/readme_images/presta_pos_config.png
+[img2]: https://raw.github.com/ePayco/plugin_prestashop/master/readme_images/pos_configuration_keys.png
