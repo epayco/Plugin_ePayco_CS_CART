@@ -1,26 +1,27 @@
-# ePayco plugin for cs-cart since 4.3.8
+# ePayco plugin para CS-CART version 4.3.8
 
-**If you have any questions or issues, feel free to contact our technical support: desarrollo@payco.co.**
+**Si usted tiene alguna pregunta o problema, no dude en ponerse en contacto con nuestro soporte técnico: desarrollo@payco.co.**
 
-## Table of Contents
+## Tabla de contenido
 
-* [Requirements](#requirements)
-* [Installation](#installation)
-* [Configuration](#configuration)
+* [Requisitos](#requisitos)
+* [Instalacion](#instalacion)
+* [Configuracion](#configuracion)
 
-## Requirements
-asasas
+## Requisitos
 
+* Tener una cuenta activa en ePayco.
+* Tener instalado CS-CART 4.3.*.
+* Acceso a las carpetas donde se encuetra instalado CS-CART.
+* Acceso al backend de CS-CART.
 
+## Instalación
 
-## Installation
-
-1. Ingresar a tu administrador de cs-cart.
+1. Ingresar a tu administrador de CS-CART.
 2. Ingresar a Add-ons / Manage add-ons.
 3. Haz click en Upload & install add-on, y busca en tu ordenador el compreso del plugin y cargalo.
 
-
-## Configuration
+## Configuración
 
 1. Ingresa a Administration / Payment & taxes.
 2. Haz click en Add payment method.
