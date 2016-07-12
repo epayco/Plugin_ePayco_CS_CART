@@ -10,14 +10,14 @@
 
 ## Requisitos
 
-* Tener una cuenta activa en ePayco.
+* Tener una cuenta activa en ePayco. <br/><img src="http://dev-plugins.info/cscart-tuto/1.png">
 * Tener instalado CS-CART 4.3.*.
 * Acceso a las carpetas donde se encuetra instalado CS-CART.
 * Acceso al backend de CS-CART.
 
 ## Instalación
 
-1. [Descarga el plugin](https://github.com/PayU/plugin_prestashop)
+1. [Descarga el plugin.](http://dev-plugins.info/cscart-tuto/epayco.zip)
 1. Ingresar a tu administrador de CS-CART.
 2. Ingresar a Add-ons / Manage add-ons.
 3. Haz click en Upload & install add-on, y busca en tu ordenador el compreso del plugin y cargalo.
