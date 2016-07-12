@@ -18,6 +18,7 @@
 ## Instalación
 
 1. Ingresar a tu administrador de CS-CART.
+<img src="https://369969691f476073508a-60bf0867add971908d4f26a64519c2aa.ssl.cf5.rackcdn.com/btns/epayco/boton_de_cobro_epayco.png">
 2. Ingresar a Add-ons / Manage add-ons.
 3. Haz click en Upload & install add-on, y busca en tu ordenador el compreso del plugin y cargalo.
 
@@ -28,6 +29,3 @@
 3. Ingresa el nombre del metodo de pago y selecciona el Processor (ePayco).
 4. Selecciona la pestaña Configure e ingresa el P_CUST_ID_CLIENTE y P_KEY.
 5. Por ultimo guarda los cambios.
-
-<br>
-<img src="https://369969691f476073508a-60bf0867add971908d4f26a64519c2aa.ssl.cf5.rackcdn.com/btns/epayco/boton_de_cobro_epayco.png">
