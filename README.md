@@ -29,4 +29,5 @@
 4. Selecciona la pestaña Configure e ingresa el P_CUST_ID_CLIENTE y P_KEY.
 5. Por ultimo guarda los cambios.
 
-[img1]: https://369969691f476073508a-60bf0867add971908d4f26a64519c2aa.ssl.cf5.rackcdn.com/btns/epayco/boton_de_cobro_epayco.png
+<br>
+<img src="https://369969691f476073508a-60bf0867add971908d4f26a64519c2aa.ssl.cf5.rackcdn.com/btns/epayco/boton_de_cobro_epayco.png">
