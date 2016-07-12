@@ -2,83 +2,22 @@
 
 **If you have any questions or issues, feel free to contact our technical support: desarrollo@payco.co.**
 
-
 ## Table of Contents
 
 * [Installing](#installation)
-* [Upgrading](#upgrade)
 * [Configuration](#configuration)
 
 ## Installation
 
-### Option 1 - recommended for users without FTP access to their PrestShop installation
+1. Ingresar a tu administrador de cs-cart.
+2. Ingresar a Add-ons / Manage add-ons.
+3. Haz click en Upload & install add-on, y busca en tu ordenador el compreso del plugin y cargalo.
 
-1. Download plugin from [the plugin repository](https://github.com/ePayco/plugin_prestashop) to local directory as zip.
-2. Unzip locally downloaded file
-3. **Create zip archive of ePayco directory**
-4. Go to the PrestaShop administration page [http://your-prestashop-url/admin].
-5. Go to **Modules** > **Modules**.
-6. **Add new module** and point archive contained plugin (created at point 3)
-7. Load the plugin
-
-### Option 2 - recommended for users with FTP access to their PrestaShop installation
-1. Download plugin from [the plugin repository](https://github.com/ePayco/plugin_prestashop) to local directory as zip.
-2. Unzip locally downloaded file
-3. Upload **'ePayco'** directory from your computer to **'modules'** catalog of your PrestaShop installation.
-
-## Upgrade
-
-1. Update plugin files according to [Installing](#installation)
-2. Go to **Advanced Parameters** > **Performance** adn click **Clear cache** 
 
 ## Configuration
 
-To configure the PrestaShop plugin:
-
-1. Go to the PrestaShop administration page [http://your-prestashop-url/admin].
-2. Go to **Modules** > **Payments & Gateways**.
-3. Select **ePayco** and click **Configure**.
-
-
-### Configuration Parameters
-
-The tables below present the descriptions of the configuration form parameters.
-
-#### Integration method
-Works only Prestashop 1.5 and 1.6
-
-| Parameter | Description | 
-|:---------:|:-----------:|
-|Payment methods displayed on Presta checkout summary page|If "No" then Prestashop will redirect to ePayco payment page|
-
-
-#### POS Parameters
-
-For each currency defined in Presta please configure the below parameters.
-
-| Parameter | Description | 
-|:---------:|:-----------:|
-|POS ID|Unique ID of the POS|
-|Second Key|MD5 key for securing communication|
-|OAuth - client_id|client_id for OAuth|
-|OAuth - client_secret|client_secret for OAuth|
-
-##### Exemplary configuration
-
-Presta:
-
-![presta_pos_config][img1]
-
-POS configuration in ePayco merchant panel:
-
-![pos_configuration_keys][img2]
-
-<!--LINKS-->
-
-<!--external links:-->
-[ext1]: http://php.net/manual/en/book.curl.php
-[ext2]: http://php.net/manual/en/book.hash.php
-
-<!--images:-->
-[img1]: https://raw.github.com/ePayco/plugin_prestashop/master/readme_images/presta_pos_config.png
-[img2]: https://raw.github.com/ePayco/plugin_prestashop/master/readme_images/pos_configuration_keys.png
+1. Ingresa a Administration / Payment & taxes.
+2. Haz click en Add payment method.
+3. Ingresa el nombre del metodo de pago y selecciona el Processor (ePayco).
+4. Selecciona la pestaña Configure e ingresa el P_CUST_ID_CLIENTE y P_KEY.
+5. Por ultimo guarda los cambios.
