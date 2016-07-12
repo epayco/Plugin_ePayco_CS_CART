@@ -27,5 +27,5 @@
 ### 1. Ingresa a Administration / Payment methods. <br/><img src="http://dev-plugins.info/cscart-tuto/4.png">
 ### 2. Haz click en Add payment method.
 ### 3. Ingresa el nombre del metodo de pago y selecciona el Processor (ePayco).<br/><img src="http://dev-plugins.info/cscart-tuto/5.png">
-### 4. Selecciona la pestaña Configure e ingresa el P_CUST_ID_CLIENTE y P_KEY.<br/><img src="http://dev-plugins.info/cscart-tuto/5.png">
+### 4. Selecciona la pestaña Configure e ingresa el P_CUST_ID_CLIENTE y P_KEY.<br/><img src="http://dev-plugins.info/cscart-tuto/6.png">
 ### 5. Por ultimo guarda los cambios.
