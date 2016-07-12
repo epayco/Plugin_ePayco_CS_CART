@@ -17,6 +17,7 @@
 
 ## Instalación
 
+1. [Descarga el plugin](https://github.com/PayU/plugin_prestashop)
 1. Ingresar a tu administrador de CS-CART.
 2. Ingresar a Add-ons / Manage add-ons.
 3. Haz click en Upload & install add-on, y busca en tu ordenador el compreso del plugin y cargalo.
