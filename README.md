@@ -29,11 +29,5 @@
 4. Selecciona la pestaña Configure e ingresa el P_CUST_ID_CLIENTE y P_KEY.
 5. Por ultimo guarda los cambios.
 
-
-<!--external links:-->
-[ext1]: http://php.net/manual/en/book.curl.php
-[ext2]: http://php.net/manual/en/book.hash.php
-
-<!--images:-->
 [img1]: https://raw.github.com/PayU/plugin_prestashop/master/readme_images/presta_pos_config.png
 [img2]: https://raw.github.com/PayU/plugin_prestashop/master/readme_images/pos_configuration_keys.png
