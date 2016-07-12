@@ -5,29 +5,9 @@
 
 ## Table of Contents
 
-* [Features](#features)
-* [Prerequisites](#prerequisites) 
 * [Installing](#installation)
 * [Upgrading](#upgrade)
 * [Configuration](#configuration)
-
-## Features
-The ePayco payments Prestashop plugin adds the ePayco payment option and enables you to process the following operations in your e-shop:
-
-* Creating a payment order (with discounts included)
-* Cancelling a payment order
-* Receive a payment order (when auto-receive is disable)
-* Conducting a refund operation (for a whole or partial order)
-* Display payment methods on Presta checkout summary page (only for Prestashop 1.5 and 1.6)
-
-## Prerequisites
-
-**Important:** This plugin works only with checkout points of sales (POS).
-
-The following PHP extensions are required:
-
-* [cURL][ext1] to connect and communicate to many different types of servers with many different types of protocols.
-* [hash][ext2] to process directly or incrementally the arbitrary length messages by using a variety of hashing algorithms.
 
 ## Installation
 
