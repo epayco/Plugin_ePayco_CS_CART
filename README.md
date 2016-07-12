@@ -18,9 +18,9 @@
 ## Instalación
 
 ### 1. [Descarga el plugin.](http://dev-plugins.info/cscart-tuto/epayco.zip)
-### 1. Ingresar a tu administrador de CS-CART. <br/><img src="http://dev-plugins.info/cscart-tuto/1.png">
-### 2. Ingresar a Add-ons / Manage add-ons. <br/><img src="http://dev-plugins.info/cscart-tuto/2.png">
-### 3. Haz click en Upload & install add-on, y busca en tu ordenador el compreso del plugin y cargalo. <br/><img src="http://dev-plugins.info/cscart-tuto/3.png">
+### 2. Ingresar a tu administrador de CS-CART. <br/><img src="http://dev-plugins.info/cscart-tuto/1.png">
+### 3. Ingresar a Add-ons / Manage add-ons. <br/><img src="http://dev-plugins.info/cscart-tuto/2.png">
+### 4. Haz click en Upload & install add-on, y busca en tu ordenador el compreso del plugin y cargalo. <br/><img src="http://dev-plugins.info/cscart-tuto/3.png">
 
 ## Configuración
 
