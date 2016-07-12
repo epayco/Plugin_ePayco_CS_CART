@@ -5,8 +5,8 @@
 ## Tabla de contenido
 
 * [Requisitos](#requisitos)
-* [Instalacion](#instalacion)
-* [Configuracion](#configuracion)
+* [Instalacion](#instalación)
+* [Configuracion](#configuración)
 
 ## Requisitos
 
