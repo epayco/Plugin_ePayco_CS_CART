@@ -30,12 +30,12 @@
 
 ## Pasos
 
-<img src="ImgTutorialPrestaShop/tuto-1.png" width="400px"/>
-<img src="ImgTutorialPrestaShop/tuto-2.png" width="400px"/>
-<img src="ImgTutorialPrestaShop/tuto-3.png" width="400px"/>
-<img src="ImgTutorialPrestaShop/tuto-4.png" width="400px"/>
-<img src="ImgTutorialPrestaShop/tuto-5.png" width="400px"/>
-<img src="ImgTutorialPrestaShop/tuto-6.png" width="400px"/>
+<img src="ImgTutorialCS_CART/tuto-1.png" width="400px"/>
+<img src="ImgTutorialCS_CART/tuto-2.png" width="400px"/>
+<img src="ImgTutorialCS_CART/tuto-3.png" width="400px"/>
+<img src="ImgTutorialCS_CART/tuto-4.png" width="400px"/>
+<img src="ImgTutorialCS_CART/tuto-5.png" width="400px"/>
+<img src="ImgTutorialCS_CART/tuto-6.png" width="400px"/>
 
 ## Versiones
 * [ePayco plugin CS-CART v4.3.8](https://github.com/epayco/Plugin_ePayco_CS_CART/releases/tag/4.3.8).
