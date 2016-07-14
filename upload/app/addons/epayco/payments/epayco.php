@@ -68,7 +68,6 @@ if (defined('PAYMENT_NOTIFICATION')) {
     $form_data = array(
         'p_cust_id_cliente' => $processor_data['processor_params']['p_cust_id_cliente'],
         'p_key' => $processor_data['processor_params']['p_key'],
-        'merchant_order_id' => $cart_order_id,
         'p_id_invoice' => $order_id,
         'p_description' => $p_description,
         'p_currency_code' => $order_info['secondary_currency'],
