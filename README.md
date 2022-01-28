@@ -42,3 +42,4 @@
 
 ## Versiones
 * [ePayco plugin CS-CART v4.3.8](https://github.com/epayco/Plugin_ePayco_CS_CART/releases/tag/4.3.8).
+* [ePayco plugin CS-CART v5.0.0](https://github.com/epayco/Plugin_ePayco_CS_CART/releases/tag/5.0.0).
