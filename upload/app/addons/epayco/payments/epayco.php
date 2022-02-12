@@ -220,7 +220,6 @@ if (defined('PAYMENT_NOTIFICATION')) {
                 <div class="loading"></div>
             </div>
             <p style="text-align: center;" class="epayco-title">
-                <span class="animated-points">Loading payment method ...</span>
             </p> 
             <center>
                 <form id="appGateway">
@@ -268,7 +267,7 @@ if (defined('PAYMENT_NOTIFICATION')) {
             </center>
             ',$processor_data['processor_params']['p_public_key'],$processor_data['processor_params']['p_test_request'],
                 $p_description,$p_description,$order_id,$order_info['secondary_currency'],$order_info['total'], $form_data["p_tax"],
-                $form_data["p_amount_base"], $form_data["shipCountry"], "false", $p_url_response, $p_url_confirmation,"es",$order_id,
+                $form_data["p_amount_base"], $form_data["shipCountry"], "true", $p_url_response, $p_url_confirmation,"es",$order_id,
                 $form_data["payerEmail"], $form_data["billAddress"]
         );
 }
