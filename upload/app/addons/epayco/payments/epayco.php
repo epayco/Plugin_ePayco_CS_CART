@@ -22,7 +22,7 @@ if (defined('PAYMENT_NOTIFICATION')) {
         $validationData = $_REQUEST;
         $confirmation = true;
     }else{
-        $url = 'https://secure.epayco.co/validation/v1/reference/'.$ref_payco;
+        $url = 'https://secure.epayco.io/validation/v1/reference/'.$ref_payco;
         $responseData =  @file_get_contents($url);
         $jsonData = @json_decode($responseData, true);
         $validationData = $jsonData['data'];
@@ -224,7 +224,7 @@ if (defined('PAYMENT_NOTIFICATION')) {
             <center>
                 <form id="appGateway">
                     <script
-                        src="https://checkout.epayco.co/checkout.js"
+                        src="https://epayco-checkout-testing.s3.amazonaws.com/checkout.preprod.js?version=1643645084821"
                         class="epayco-button"
                         data-epayco-key="%s"
                         data-epayco-test="%s"
