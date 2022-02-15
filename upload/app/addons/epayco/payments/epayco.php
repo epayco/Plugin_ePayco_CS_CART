@@ -22,7 +22,7 @@ if (defined('PAYMENT_NOTIFICATION')) {
         $validationData = $_REQUEST;
         $confirmation = true;
     }else{
-        $url = 'https://secure.epayco.co/validation/v1/reference/'.$ref_payco;
+        $url = 'https://secure.epayco.io/validation/v1/reference/'.$ref_payco;
         $responseData =  @file_get_contents($url);
         $jsonData = @json_decode($responseData, true);
         $validationData = $jsonData['data'];
@@ -220,12 +220,11 @@ if (defined('PAYMENT_NOTIFICATION')) {
                 <div class="loading"></div>
             </div>
             <p style="text-align: center;" class="epayco-title">
-                <span class="animated-points">Loading payment method ...</span>
             </p> 
             <center>
                 <form id="appGateway">
                     <script
-                        src="https://checkout.epayco.co/checkout.js"
+                        src="https://epayco-checkout-testing.s3.amazonaws.com/checkout.preprod.js?version=1643645084821"
                         class="epayco-button"
                         data-epayco-key="%s"
                         data-epayco-test="%s"
@@ -268,7 +267,7 @@ if (defined('PAYMENT_NOTIFICATION')) {
             </center>
             ',$processor_data['processor_params']['p_public_key'],$processor_data['processor_params']['p_test_request'],
                 $p_description,$p_description,$order_id,$order_info['secondary_currency'],$order_info['total'], $form_data["p_tax"],
-                $form_data["p_amount_base"], $form_data["shipCountry"], "false", $p_url_response, $p_url_confirmation,"es",$order_id,
+                $form_data["p_amount_base"], $form_data["shipCountry"], "true", $p_url_response, $p_url_confirmation,"es",$order_id,
                 $form_data["payerEmail"], $form_data["billAddress"]
         );
 }
