@@ -124,11 +124,19 @@ if (defined('PAYMENT_NOTIFICATION')) {
         }else{
             $pp_response['order_status'] = 'I';
 	        $pp_response['reason_text'] = __('text_transaction_declined');
+	        if (fn_check_payment_script('epayco.php', $order_id)) {
+                fn_update_order_payment_info($order_id, $pp_response);
+                fn_change_order_status($order_id, $pp_response['order_status'], '', false);
+            }
         }
 
     }else{
 	    $pp_response['order_status'] = 'F';
 	    $pp_response['reason_text'] = __('text_transaction_declined');
+	    if (fn_check_payment_script('epayco.php', $order_id)) {
+                fn_update_order_payment_info($order_id, $pp_response);
+                fn_change_order_status($order_id, $pp_response['order_status'], '', false);
+            }
     }
         fn_finish_payment($order_id, $pp_response);
         if($confirmation){
@@ -266,8 +274,8 @@ if (defined('PAYMENT_NOTIFICATION')) {
                 
             </center>
             ',$processor_data['processor_params']['p_public_key'],$processor_data['processor_params']['p_test_request'],
-                $p_description,$p_description,$order_id,$order_info['secondary_currency'],$order_info['total'], $form_data["p_tax"],
-                $form_data["p_amount_base"], $form_data["shipCountry"], "true", $p_url_response, $p_url_confirmation,"es",$order_id,
+                $p_description,$p_description,$order_id,$order_info['secondary_currency'],$order_info['total'], $p_tax,
+                $p_amount_base, $form_data["shipCountry"], "true", $p_url_response, $p_url_confirmation,"es",$order_id,
                 $form_data["payerEmail"], $form_data["billAddress"]
         );
 }
