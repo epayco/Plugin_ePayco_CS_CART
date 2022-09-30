@@ -54,7 +54,7 @@ function fn_epayco_user_init(&$auth, &$user_info, &$first_init)
     foreach ($orders_list as $order_id) {
         if (fn_is_epayco_ipn_received($order_id)) {
             fn_clear_cart(Tygh::$app['session']['cart']);
-            die(fn_epayco_order_total_is_correct($order_id));
+             fn_epayco_order_total_is_correct($order_id);
             break;
         }
     }
@@ -105,10 +105,9 @@ function fn_epayco_order_total_is_correct($order_id)
     $url_checkout = fn_url("pages.view&page_id=".$id_page."&");
 
     $description = db_get_field("SELECT description FROM ?:page_descriptions WHERE page_id = ?i", $id_page);
-    if(count($description) > 0){
-        header('Location: '.$url_checkout.$queryParams);
+    if(!empty($description)){
+         header('Location: '.$url_checkout."?".$queryParams);
     }
-    return true;
 }
 
 function fn_epayco_prepare_checkout_payment_methods(&$cart, &$auth, &$payment_groups)
