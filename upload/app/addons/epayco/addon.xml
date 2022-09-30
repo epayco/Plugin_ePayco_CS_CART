@@ -10,8 +10,64 @@
     <auto_install>MULTIVENDOR,ULTIMATE</auto_install>
     <queries>
         <item type="file">database/query.sql</item>
+        <item>INSERT INTO ?:pages (
+            page_id,
+            company_id,
+            parent_id,
+            id_path,
+            status,
+            page_type,
+            position,
+            timestamp,
+            usergroup_ids,
+            localization,
+            new_window,
+            use_avail_period,
+            avail_from_timestamp,
+            avail_till_timestamp,
+            facebook_obj_type)
+            VALUES (
+            '201',
+            '0',
+            '0',
+            '201',
+            'A',
+            'T',
+            '0',
+            '0',
+            '0',
+            '',
+            '0',
+            'N',
+            '0',
+            '0',
+            'activity'
+            );
+        </item>
+        <item>INSERT INTO ?:page_descriptions (
+            page_id,
+            lang_code,
+            page,
+            description,
+            meta_keywords,
+            meta_description,
+            page_title,
+            link)
+            VALUES (
+            '201',
+            'es',
+            'epayco checkout',
+            '',
+            'epayco checkout',
+            'epayco checkout',
+            'epayco checkout',
+            ''
+            );
+        </item>
     </queries>
     <functions>
         <item for="uninstall">fn_epayco_uninstall_payment_processors</item>
+        <item for="uninstall">fn_epayco_uninstall_pages_processors</item>
+        <item for="uninstall">fn_epayco_uninstall_page_descriptions_processors</item>
     </functions>
 </addon>

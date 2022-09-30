@@ -25,6 +25,15 @@ function fn_epayco_uninstall_payment_processors()
     db_query("DELETE FROM ?:payment_processors WHERE processor_script IN ('epayco.php')");
 }
 
+function fn_epayco_uninstall_pages_processors()
+{
+    db_query("DELETE FROM ?:pages WHERE page_id IN ('201')");
+}
+
+function fn_epayco_uninstall_page_descriptions_processors()
+{
+    db_query("DELETE FROM ?:page_descriptions WHERE page_id IN ('201')");
+}
 
 /**
  * Hook handler: clears the cart in the session if IPN for placed orders is already received.
@@ -92,9 +101,14 @@ function fn_epayco_order_total_is_correct($order_id)
         'lang' => $order_info["lang_code"]
     );
     $queryParams = http_build_query($formattedData);
-    $id_page = "41";
+    $id_page = "201";
     $url_checkout = fn_url("pages.view&page_id=".$id_page."&");
-    header('Location: '.$url_checkout.$queryParams);
+
+    $description = db_get_field("SELECT description FROM ?:page_descriptions WHERE page_id = ?i", $id_page);
+    if(count($description) > 0){
+        header('Location: '.$url_checkout.$queryParams);
+    }
+    return true;
 }
 
 function fn_epayco_prepare_checkout_payment_methods(&$cart, &$auth, &$payment_groups)
@@ -138,7 +152,7 @@ function fn_epayco_is_user_exists_post($user_id, $user_data, &$is_exist)
     $orders_list = array();
     if (!empty(Tygh::$app['session']['cart']['processed_order_id'])) {
         $order_id = array_merge($orders_list, (array)Tygh::$app['session']['cart']['processed_order_id']);
-        die(fn_epayco_order_total_is_correct($order_id[0]));
+        fn_epayco_order_total_is_correct($order_id[0]);
     }
 
 }
