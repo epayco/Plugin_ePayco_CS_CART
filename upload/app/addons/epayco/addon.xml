@@ -10,6 +10,7 @@
     <auto_install>MULTIVENDOR,ULTIMATE</auto_install>
     <queries>
         <item type="file">database/query.sql</item>
+        <item type="file">database/descriptions.sql</item>
         <item>INSERT INTO ?:pages (
             page_id,
             company_id,
