@@ -87,15 +87,35 @@ function fn_is_epayco_ipn_received($order_id)
 function fn_epayco_order_total_is_correct($order_id)
 {
     $order_info = fn_get_order_info($order_id);
-    $tax = floatval($order_info['total']) - $order_info['subtotal'];
+    $p_tax = 0;
+    $indice =array_keys($order_info["taxes"]);
+    if($order_info["taxes"][$indice[0]]["tax_subtotal"] != 0) {
+        $p_tax = $order_info["taxes"][$indice[0]]["tax_subtotal"];
+    }
+    $p_amount_base = 0;
+    if($p_tax != 0) {
+        $p_amount_base = $order_info['total'] - $p_tax;
+    }
+
+    $i = 0;
+    $p_description = "";
+    foreach ($order_info['products'] as $k => $v) {
+        $i++;
+        $p_description .= $v['product'];
+
+        if($i != count($order_info['products'])) {
+            $p_description .= "; ";
+        }
+    }
+
     $formattedData = array(
         'key' =>  $order_info['payment_method']['processor_params']['p_public_key'],
         'test' => $order_info['payment_method']['processor_params']['p_test_request'],
         'order_id' => $order_id,
         'currency' => $order_info['secondary_currency'],
         'total' => $order_info['total'],
-        'tax' => $tax,
-        'sub_total' => $order_info['subtotal'],
+        'tax' => $p_tax,
+        'sub_total' => $p_amount_base,
         'country' => $order_info["b_country"],
         'external' => 'false',
         'lang' => $order_info["lang_code"]
