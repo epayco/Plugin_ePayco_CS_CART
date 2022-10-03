@@ -44,26 +44,6 @@
             'activity'
             );
         </item>
-        <item>INSERT INTO ?:page_descriptions (
-            page_id,
-            lang_code,
-            page,
-            description,
-            meta_keywords,
-            meta_description,
-            page_title,
-            link)
-            VALUES (
-            '201',
-            'es',
-            'epayco checkout',
-            '',
-            'epayco checkout',
-            'epayco checkout',
-            'epayco checkout',
-            ''
-            );
-        </item>
     </queries>
     <functions>
         <item for="uninstall">fn_epayco_uninstall_payment_processors</item>
