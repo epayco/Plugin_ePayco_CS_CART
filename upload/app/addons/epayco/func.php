@@ -108,6 +108,13 @@ function fn_epayco_order_total_is_correct($order_id)
         }
     }
 
+    $type_checkout = $order_info['payment_method']['processor_params']['p_type_checkout'];
+    if($type_checkout == "TRUE"){
+        $type_checkout_mode = "true";
+    }else{
+        $type_checkout_mode = "false";
+    }
+
     $formattedData = array(
         'key' =>  $order_info['payment_method']['processor_params']['p_public_key'],
         'test' => $order_info['payment_method']['processor_params']['p_test_request'],
@@ -117,17 +124,14 @@ function fn_epayco_order_total_is_correct($order_id)
         'tax' => $p_tax,
         'sub_total' => $p_amount_base,
         'country' => $order_info["b_country"],
-        'external' => 'false',
+        'external' => $type_checkout_mode,
         'lang' => $order_info["lang_code"]
     );
     $queryParams = http_build_query($formattedData);
     $id_page = "201";
     $url_checkout = fn_url("pages.view&page_id=".$id_page."&");
-
-    $description = db_get_field("SELECT description FROM ?:page_descriptions WHERE page_id = ?i", $id_page);
-    if(!empty($description)){
-         header('Location: '.$url_checkout."?".$queryParams);
-    }
+    header('Location: '.$url_checkout."?".$queryParams);
+    
 }
 
 function fn_epayco_prepare_checkout_payment_methods(&$cart, &$auth, &$payment_groups)
