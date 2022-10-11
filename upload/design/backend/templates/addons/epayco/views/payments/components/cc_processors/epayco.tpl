@@ -35,3 +35,17 @@
         </select>
     </div>
 </div>
+<div class="control-group">
+    <label class="control-label" for="p_type_checkout">TYPE_CHECKOUT:</label>
+    <div class="controls">
+        <select name="payment_data[processor_params][p_type_checkout]" id="p_type_checkout">
+            {if $processor_params.p_type_checkout == 'TRUE'}
+                <option value="TRUE" selected="selected">STANDART</option>
+                <option value="FALSE">ONE PAGE</option>
+            {else}
+                <option value="TRUE">STANDART</option>
+                <option value="FALSE" selected="selected">ONE PAGE</option>
+            {/if}
+        </select>
+    </div>
+</div>
