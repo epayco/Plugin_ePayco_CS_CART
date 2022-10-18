@@ -22,7 +22,7 @@ if (defined('PAYMENT_NOTIFICATION')) {
         $validationData = $_REQUEST;
         $confirmation = true;
     }else{
-        $url = 'https://secure.epayco.io/validation/v1/reference/'.$ref_payco;
+        $url = 'https://secure.epayco.co/validation/v1/reference/'.$ref_payco;
         $responseData =  @file_get_contents($url);
         $jsonData = @json_decode($responseData, true);
         $validationData = $jsonData['data'];
