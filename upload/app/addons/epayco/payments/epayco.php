@@ -122,13 +122,21 @@ if (defined('PAYMENT_NOTIFICATION')) {
                 fn_change_order_status($order_id, $pp_response['order_status'], '', false);
             }
         }else{
-            $pp_response['order_status'] = 'I';
+            $pp_response['order_status'] = 'F';
 	        $pp_response['reason_text'] = __('text_transaction_declined');
+	        if (fn_check_payment_script('epayco.php', $order_id)) {
+                fn_update_order_payment_info($order_id, $pp_response);
+                fn_change_order_status($order_id, $pp_response['order_status'], '', false);
+            }
         }
 
     }else{
 	    $pp_response['order_status'] = 'F';
 	    $pp_response['reason_text'] = __('text_transaction_declined');
+	    if (fn_check_payment_script('epayco.php', $order_id)) {
+                fn_update_order_payment_info($order_id, $pp_response);
+                fn_change_order_status($order_id, $pp_response['order_status'], '', false);
+            }
     }
         fn_finish_payment($order_id, $pp_response);
         if($confirmation){
