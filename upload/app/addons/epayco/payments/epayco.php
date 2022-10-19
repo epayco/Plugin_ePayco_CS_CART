@@ -201,82 +201,29 @@ if (defined('PAYMENT_NOTIFICATION')) {
         'payerEmail'  => $order_info['email'],
         'payerPhone'  => $location_manager->getLocationField($order_info, 'phone', '', BILLING_ADDRESS_PREFIX),
     );
-    $epaycoButtonImage ="https://multimedia.epayco.co/epayco-landing/btns/Boton-epayco-color1.png";
-    
-    echo sprintf('
-        <style>
-            .loader-container{
-                position: relative;
-                padding: 20px;
-                color: #ff5700;
-            }
-            .epayco-subtitle{
-                font-size: 14px;
-            }
-            .epayco-button-render{
-                transition: all 500ms cubic-bezier(0.000, 0.445, 0.150, 1.025);
-                transform: scale(1.1);
-                box-shadow: 0 0 4px rgba(0,0,0,0);
-            }
-            .epayco-button-render:hover {
-                /*box-shadow: 0 0 4px rgba(0,0,0,.5);*/
-                transform: scale(1.2);
-            }
-           
-        </style>
-            <div class="loader-container">
-                <div class="loading"></div>
-            </div>
-            <p style="text-align: center;" class="epayco-title">
-            </p> 
-            <center>
-                <form id="appGateway">
-                    <script
-                        src="https://checkout.epayco.co/checkout.js"
-                        class="epayco-button"
-                        data-epayco-key="%s"
-                        data-epayco-test="%s"
-                        data-epayco-name="%s"
-                        data-epayco-description="%s"
-                        data-epayco-invoice="%s"      
-                        data-epayco-currency="%s"                   
-                        data-epayco-amount="%s"
-                        data-epayco-tax="%s"
-                        data-epayco-tax-base="%s"
-                        data-epayco-country="%s"
-                        data-epayco-external="%s"                       
-                        data-epayco-response="%s"
-                        data-epayco-confirmation="%s"
-                        data-epayco-lang="%s"
-                        data-epayco-button="'.$epaycoButtonImage.'"
-                        data-epayco-autoclick="true"
-                        data-epayco-extra1="%s"
-                        data-epayco-email-billing="%s"
-                        data-epayco-address-billing="%s"
-                        >
-                    </script>
-                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-                    <script>
-                        window.onload = function() {
-                            document.addEventListener("contextmenu", function(e){
-                                e.preventDefault();
-                            }, false);
-                        } 
-                        $(document).keydown(function (event) {
-                            if (event.keyCode == 123) {
-                                return false;
-                            } else if (event.ctrlKey && event.shiftKey && event.keyCode == 73) {        
-                                return false;
-                            }
-                        });
-                    </script>
-                </form>
-                
-            </center>
-            ',$processor_data['processor_params']['p_public_key'],$processor_data['processor_params']['p_test_request'],
-                $p_description,$p_description,$order_id,$order_info['secondary_currency'],$order_info['total'], $p_tax,
-                $p_amount_base, $form_data["shipCountry"], "true", $p_url_response, $p_url_confirmation,"es",$order_id,
-                $form_data["payerEmail"], $form_data["billAddress"]
-        );
+   
+    $type_checkout = $order_info['payment_method']['processor_params']['p_type_checkout'];
+    if($type_checkout == "TRUE"){
+        $type_checkout_mode = "true";
+    }else{
+        $type_checkout_mode = "false";
+    }
+
+    $formattedData = array(
+        'key' =>  $order_info['payment_method']['processor_params']['p_public_key'],
+        'test' => $order_info['payment_method']['processor_params']['p_test_request'],
+        'order_id' => $order_id,
+        'currency' => $order_info['secondary_currency'],
+        'total' => $order_info['total'],
+        'tax' => $p_tax,
+        'sub_total' => $p_amount_base,
+        'country' => $order_info["b_country"],
+        'external' => $type_checkout_mode,
+        'lang' => $order_info["lang_code"]
+    );
+    $queryParams = http_build_query($formattedData);
+    $id_page = "201";
+    $url_checkout = fn_url("pages.view&page_id=".$id_page."&");
+    header('Location: '.$url_checkout."?".$queryParams);
 }
 exit;
