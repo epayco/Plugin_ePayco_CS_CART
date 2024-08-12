@@ -22,7 +22,7 @@ if (defined('PAYMENT_NOTIFICATION')) {
         $validationData = $_REQUEST;
         $confirmation = true;
     }else{
-        $url = 'https://secure.epayco.io/validation/v1/reference/'.$ref_payco;
+        $url = 'https://secure.epayco.co/validation/v1/reference/'.$ref_payco;
         $responseData =  @file_get_contents($url);
         $jsonData = @json_decode($responseData, true);
         $validationData = $jsonData['data'];
@@ -122,13 +122,21 @@ if (defined('PAYMENT_NOTIFICATION')) {
                 fn_change_order_status($order_id, $pp_response['order_status'], '', false);
             }
         }else{
-            $pp_response['order_status'] = 'I';
+            $pp_response['order_status'] = 'F';
 	        $pp_response['reason_text'] = __('text_transaction_declined');
+	        if (fn_check_payment_script('epayco.php', $order_id)) {
+                fn_update_order_payment_info($order_id, $pp_response);
+                fn_change_order_status($order_id, $pp_response['order_status'], '', false);
+            }
         }
 
     }else{
 	    $pp_response['order_status'] = 'F';
 	    $pp_response['reason_text'] = __('text_transaction_declined');
+	    if (fn_check_payment_script('epayco.php', $order_id)) {
+                fn_update_order_payment_info($order_id, $pp_response);
+                fn_change_order_status($order_id, $pp_response['order_status'], '', false);
+            }
     }
         fn_finish_payment($order_id, $pp_response);
         if($confirmation){

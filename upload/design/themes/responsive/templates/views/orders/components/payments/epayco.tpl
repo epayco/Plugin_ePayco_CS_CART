@@ -1,1 +1,1 @@
-<td><img src="https://multimedia.epayco.co/epayco-landing/btns/epayco_pago_seguro.png"></td>
+<td><img src="design/themes/responsive/templates/views/orders/components/payments/images/logo.png"></td>

@@ -13,13 +13,13 @@
 ## Requisitos
 
 * Tener una cuenta activa en [ePayco](https://pagaycobra.com).
-* Tener instalado CS-CART v4.3.8.
+* Tener instalado CS-CART
 * Acceso a las carpetas donde se encuetra instalado CS-CART.
 * Acceso al admin de CS-CART.
 
 ## Instalación
 
-1. [Descarga el plugin.](https://github.com/epayco/Plugin_ePayco_CS_CART/releases/tag/4.3.8)
+1. [Descarga el plugin.](https://github.com/epayco/Plugin_ePayco_CS_CART/)
 2. Ingresar a tu administrador de CS-CART.
 3. Ingresar a Add-ons / Manage add-ons.
 4. Haz click en Upload & install add-on, automaticamente se instalara el plugin.
@@ -43,3 +43,4 @@
 ## Versiones
 * [ePayco plugin CS-CART v4.3.8](https://github.com/epayco/Plugin_ePayco_CS_CART/releases/tag/4.3.8).
 * [ePayco plugin CS-CART v5.0.0](https://github.com/epayco/Plugin_ePayco_CS_CART/releases/tag/5.0.0).
+* [ePayco plugin CS-CART v5.1.0](https://github.com/epayco/Plugin_ePayco_CS_CART/releases/tag/5.1.0).
