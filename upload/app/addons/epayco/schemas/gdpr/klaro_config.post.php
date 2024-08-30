@@ -12,11 +12,19 @@
  * "copyright.txt" FILE PROVIDED WITH THIS DISTRIBUTION PACKAGE.            *
  ****************************************************************************/
 
-if (!defined('BOOTSTRAP')) { die('Access denied'); }
+defined('BOOTSTRAP') or die('Access denied');
 
-fn_register_hooks(
-    'prepare_checkout_payment_methods',
-    'is_user_exists_post',
-    'checkout_place_orders_pre_route',
-    'user_init'
-);
+/** @var array $schema */
+$schema['services']['epayco'] = [
+    'purposes' => ['strictly_necessary'],
+    'name' => 'epayco',
+    'translations' => [
+        'zz' => [
+            'title' => 'epayco.epayco_cookie_title',
+            'description' => 'epayco.epayco_cookie_description'
+        ],
+    ],
+    'required' => true,
+];
+
+return $schema;

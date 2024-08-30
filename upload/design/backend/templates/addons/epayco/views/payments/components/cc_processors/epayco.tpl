@@ -15,10 +15,32 @@
     </div>
 </div>
 <div class="control-group">
+    <label class="control-label" for="p_private_key">PRIVATE_KEY:</label>
+    <div class="controls">
+        <input type="text" name="payment_data[processor_params][p_private_key]" 
+            id="p_private_key"
+            value="{$processor_params.p_private_key}"/>
+    </div>
+</div>
+<div class="control-group">
     <label class="control-label" for="p_key">P_KEY:</label>
     <div class="controls">
         <input type="text" name="payment_data[processor_params][p_key]" id="p_key" 
         value="{$processor_params.p_key}"/>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for="p_type_checkout">Standard Checkout:</label>
+    <div class="controls">
+        <select name="payment_data[processor_params][p_type_checkout]" id="p_type_checkout">
+            {if $processor_params.p_type_checkout == 'TRUE'}
+                <option value="TRUE" selected="selected">SI</option>
+                <option value="FALSE">NO</option>
+            {else}
+                <option value="TRUE">SI</option>
+                <option value="FALSE" selected="selected">NO</option>
+            {/if}
+        </select>
     </div>
 </div>
 <div class="control-group">
@@ -31,20 +53,6 @@
             {else}
                 <option value="TRUE">SI</option>
                 <option value="FALSE" selected="selected">NO</option>
-            {/if}
-        </select>
-    </div>
-</div>
-<div class="control-group">
-    <label class="control-label" for="p_type_checkout">TYPE_CHECKOUT:</label>
-    <div class="controls">
-        <select name="payment_data[processor_params][p_type_checkout]" id="p_type_checkout">
-            {if $processor_params.p_type_checkout == 'TRUE'}
-                <option value="TRUE" selected="selected">STANDART</option>
-                <option value="FALSE">ONE PAGE</option>
-            {else}
-                <option value="TRUE">STANDART</option>
-                <option value="FALSE" selected="selected">ONE PAGE</option>
             {/if}
         </select>
     </div>

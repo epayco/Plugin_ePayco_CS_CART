@@ -12,11 +12,23 @@
  * "copyright.txt" FILE PROVIDED WITH THIS DISTRIBUTION PACKAGE.            *
  ****************************************************************************/
 
-if (!defined('BOOTSTRAP')) { die('Access denied'); }
+defined('BOOTSTRAP') or die('Access denied');
 
-fn_register_hooks(
-    'prepare_checkout_payment_methods',
-    'is_user_exists_post',
-    'checkout_place_orders_pre_route',
-    'user_init'
+$schema = array(
+    'COP' => array(
+        'name' => 'currency_code_cod',
+        'code' => 'COD',
+        'id' => 999,
+        'supports' => array('standard', 'checkout'),
+        'active' => true
+    ),
+    'USD' => array(
+        'name' => 'currency_code_usd',
+        'code' => 'USD',
+        'supports' => array('standard', 'checkout'),
+        'id' => 840,
+        'active' => true
+    )
 );
+
+return $schema;

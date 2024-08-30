@@ -12,11 +12,25 @@
  * "copyright.txt" FILE PROVIDED WITH THIS DISTRIBUTION PACKAGE.            *
  ****************************************************************************/
 
-if (!defined('BOOTSTRAP')) { die('Access denied'); }
+namespace Tygh\Enum\Addons\Epayco;
 
-fn_register_hooks(
-    'prepare_checkout_payment_methods',
-    'is_user_exists_post',
-    'checkout_place_orders_pre_route',
-    'user_init'
-);
+use ReflectionClass;
+
+class Processors
+{
+    const STANDARD = 'epayco.php';
+
+    public static function getAll()
+    {
+        $reflector = new ReflectionClass(__CLASS__);
+
+        return $reflector->getConstants();
+    }
+
+    public static function getAllWithTypes()
+    {
+        return array(
+            self::STANDARD => ProcessorTypes::STANDARD,
+        );
+    }
+}
