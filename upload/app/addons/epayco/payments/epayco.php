@@ -12,10 +12,32 @@
 * "copyright.txt" FILE PROVIDED WITH THIS DISTRIBUTION PACKAGE.            *
 ****************************************************************************/
 
-if (!defined('BOOTSTRAP')) { die('Access denied'); }
+/**
+ * @var array $processor_data
+ * @var array $order_info
+ * @var string $mode
+ */
+
+use Tygh\Enum\OrderStatuses;
+use Tygh\Languages\Languages;
 use Tygh\Tygh;
+
+if (!defined('BOOTSTRAP')) { die('Access denied'); }
+
 if (defined('PAYMENT_NOTIFICATION')) {
 
+    // states success
+    $statusSuccess = array(1, 3);
+
+    // Get the processor data
+    $payment_id = db_get_field("SELECT payment_id FROM ?:orders WHERE order_id = ?i", $_REQUEST['order_id']);
+    $processor_data = fn_get_payment_method_data($payment_id);
+    $order_info = fn_get_order_info($_REQUEST['order_id']);
+
+    $pp_response = array();
+    $pp_response['order_status'] = (in_array($_REQUEST['x_cod_response'], $statusSuccess)) ? 'P' : 'F';
+    $pp_response['reason_text'] = $_REQUEST['x_response_reason_text'];
+    $pp_response['transaction_id'] = $_REQUEST['x_transaction_id'];
     $confirmation = false;
     $ref_payco = $_GET['ref_payco'];
     if(empty($ref_payco)){
@@ -42,7 +64,7 @@ if (defined('PAYMENT_NOTIFICATION')) {
     }else{
         $order_id_ = null;
     }
-    
+
 
     // states success
     $statusSuccess = array(1, 3);
@@ -50,7 +72,7 @@ if (defined('PAYMENT_NOTIFICATION')) {
     // Get the processor data
     $payment_id = db_get_field("SELECT payment_id FROM ?:orders WHERE order_id = ?i", $order_id);
     $processor_data = fn_get_payment_method_data($payment_id);
-    
+
     $order_info = fn_get_order_info($order_id);
     $pp_response = array();
 
@@ -62,7 +84,7 @@ if (defined('PAYMENT_NOTIFICATION')) {
             .$x_transaction_id.'^'
             .$x_amount.'^'
             .$x_currency_code
-        ); 
+        );
         $isTestTransaction = $x_test_request == 'TRUE' ? "yes" : "no";
         $isTestMode = $isTestTransaction == "yes" ? "true" : "false";
         $isTestPluginMode = $processor_data['processor_params']['p_test_request']  == 'TRUE' ? "yes" : "no";
@@ -81,10 +103,10 @@ if (defined('PAYMENT_NOTIFICATION')) {
                         $validation = false;
                     }
                 }
-                
+
             }
         }else{
-             $validation = false;
+            $validation = false;
         }
 
         if($signature == $x_signature && $validation){
@@ -123,30 +145,30 @@ if (defined('PAYMENT_NOTIFICATION')) {
             }
         }else{
             $pp_response['order_status'] = 'F';
-	        $pp_response['reason_text'] = __('text_transaction_declined');
-	        if (fn_check_payment_script('epayco.php', $order_id)) {
+            $pp_response['reason_text'] = __('text_transaction_declined');
+            if (fn_check_payment_script('epayco.php', $order_id)) {
                 fn_update_order_payment_info($order_id, $pp_response);
                 fn_change_order_status($order_id, $pp_response['order_status'], '', false);
             }
         }
 
     }else{
-	    $pp_response['order_status'] = 'F';
-	    $pp_response['reason_text'] = __('text_transaction_declined');
-	    if (fn_check_payment_script('epayco.php', $order_id)) {
-                fn_update_order_payment_info($order_id, $pp_response);
-                fn_change_order_status($order_id, $pp_response['order_status'], '', false);
-            }
-    }
-        fn_finish_payment($order_id, $pp_response);
-        if($confirmation){
-            echo "code response: ".$x_cod_transaction_state;
-        }else{
-            fn_order_placement_routines('route', $order_id);
+        $pp_response['order_status'] = 'F';
+        $pp_response['reason_text'] = __('text_transaction_declined');
+        if (fn_check_payment_script('epayco.php', $order_id)) {
+            fn_update_order_payment_info($order_id, $pp_response);
+            fn_change_order_status($order_id, $pp_response['order_status'], '', false);
         }
-        
+    }
+    fn_finish_payment($order_id, $pp_response);
+    if($confirmation){
+        echo "code response: ".$x_cod_transaction_state;
+    }else{
+        fn_order_placement_routines('route', $order_id);
+    }
+    fn_clear_cart(Tygh::$app['session']['cart']);
     exit;
-} else {
+}else {
 
     $p_tax = 0;
     $indice =array_keys($order_info["taxes"]);
@@ -161,13 +183,13 @@ if (defined('PAYMENT_NOTIFICATION')) {
 
 
     $i = 0;
-    $p_description = ""; 
+    $p_description = "";
     foreach ($order_info['products'] as $k => $v) {
         $i++;
         $p_description .= $v['product'];
 
         if($i != count($order_info['products'])) {
-            $p_description .= "; ";         
+            $p_description .= "; ";
         }
     }
 
@@ -183,7 +205,7 @@ if (defined('PAYMENT_NOTIFICATION')) {
     $form_data = array(
         'p_cust_id_cliente' => $processor_data['processor_params']['p_cust_id_cliente'],
         'p_public_key' => $processor_data['processor_params']['p_public_key'],
-        'p_key' => $processor_data['processor_params']['p_key'],    
+        'p_key' => $processor_data['processor_params']['p_key'],
         'p_id_invoice' => $order_id,
         'p_description' => $p_description,
         'p_currency_code' => $order_info['secondary_currency'],
@@ -201,7 +223,7 @@ if (defined('PAYMENT_NOTIFICATION')) {
         'payerEmail'  => $order_info['email'],
         'payerPhone'  => $location_manager->getLocationField($order_info, 'phone', '', BILLING_ADDRESS_PREFIX),
     );
-   
+
     $type_checkout = $order_info['payment_method']['processor_params']['p_type_checkout'];
     if($type_checkout == "TRUE"){
         $type_checkout_mode = "true";
@@ -223,7 +245,11 @@ if (defined('PAYMENT_NOTIFICATION')) {
     );
     $queryParams = http_build_query($formattedData);
     $id_page = "201";
-    $url_checkout = fn_url("pages.view&page_id=".$id_page."&");
-    header('Location: '.$url_checkout."?".$queryParams);
+    //
+    $view = Tygh::$app['view'];
+    $view->assign('my_data', $order_id);
+    fn_redirect('index.php?dispatch=epayco_checkout.epayco&order_id='.$order_id);
+    //$url_checkout = fn_url("pages.view&page_id=".$id_page."&");
+    //header('Location: '.$url_checkout."?".$queryParams);
 }
-exit;
+return; // Detiene la ejecución después de notificar
