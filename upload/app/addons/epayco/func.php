@@ -12,14 +12,10 @@
  * "copyright.txt" FILE PROVIDED WITH THIS DISTRIBUTION PACKAGE.            *
  ****************************************************************************/
 
-use Tygh\Embedded;
 use Tygh\Enum\ImagePairTypes;
-use Tygh\Enum\OrderStatuses;
 use Tygh\Enum\SiteArea;
 use Tygh\Enum\YesNo;
-use Tygh\Http;
 use Tygh\Providers\StorefrontProvider;
-use Tygh\Registry;
 use Tygh\Settings;
 
 if (!defined('BOOTSTRAP')) { die('Access denied'); }
@@ -331,86 +327,6 @@ function fn_pp_save_mode($order_info)
     return true;
 }
 
-
-
-/**
- * Return available currencies
- * @param string $type Type of epayco (standard|express|payflow|pro|advanced|null)
- * @return array
- */
-function fn_epayco_get_currencies($type = null)
-{
-    $epayco_currencies = fn_get_schema('epayco', 'currencies');
-
-    $currencies = fn_get_currencies();
-    $result = array();
-
-    foreach ($epayco_currencies as $key => &$item) {
-        $item['active'] = isset($currencies[$key]);
-
-        $item['name'] = __($item['name']);
-
-        if ($type === null || in_array($type, $item['supports'], true)) {
-            $result[$key] = $item;
-        }
-    }
-
-    unset($item);
-
-    return $result;
-}
-
-/**
- * Return currency data
- * @param string|int $id
- * @return array|false if no defined return false
- */
-function fn_epayco_get_currency($id)
-{
-    $currencies = fn_epayco_get_currencies();
-
-    if (is_numeric($id)) {
-        foreach ($currencies as $currency) {
-            if ($currency['id'] == $id) {
-                return $currency;
-            }
-        }
-    } elseif (isset($currencies[$id])) {
-        return $currencies[$id];
-    }
-
-    return false;
-}
-
-/**
- * Return valid currency data
- * @param string|int $id
- * @return array
- * ```
- * array(
- *  name => string,
- *  id => int,
- *  active => bool,
- *  code => string
- * )
- * ```
- */
-function fn_epayco_get_valid_currency($id)
-{
-    $currency = fn_epayco_get_currency($id);
-
-    if ($currency === false || !$currency['active']) {
-        $currency = fn_epayco_get_currency(CART_PRIMARY_CURRENCY);
-
-        if ($currency === false) {
-            $currency = fn_epayco_get_currency('USD');
-        }
-    }
-
-    return $currency;
-}
-
-
 /**
  * Checks if payment processor is the one provided by the add-on.
  *
@@ -422,6 +338,7 @@ function fn_is_epayco_processor($processor_id = 0)
 {
     return (bool) db_get_field("SELECT 1 FROM ?:payment_processors WHERE processor_id = ?i AND addon = ?s", $processor_id, 'epayco');
 }
+
 
 
 
