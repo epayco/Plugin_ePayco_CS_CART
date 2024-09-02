@@ -93,7 +93,7 @@ function fn_epayco_checkout_action()
     $view->assign('amount', $order_info['total']);
     $view->assign('tax', $p_tax);
     $view->assign('amount_base', $p_amount_base);
-    $view->assign('test_request', $processor_data['processor_params']['p_test_request']);
+    $view->assign('test_request', strtolower($processor_data['processor_params']['p_test_request']));
     $view->assign('url_response', $p_url_response);
     $view->assign('url_confirmation',  $p_url_confirmation);
     $view->assign('billAddress', $location_manager->getLocationField($order_info, 'address', '', BILLING_ADDRESS_PREFIX));
