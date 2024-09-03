@@ -28,7 +28,7 @@
 7. Ingresa el nombre del metodo de pago y selecciona el Processor (ePayco).
 8. Ingresa al panel de clientes de ePayco para obtener el **P_CUST_ID_CLIENTE** y **P_KEY**.
 9. Por último configura el plugin de ePayco ingresando los datos del formulario en la pestaña Configure. 
-
+10. Asegurar que la siguiente ruta **design/themes/[tema_activo]/templates/addons/epayco/views/epayco_checkout/epayco.tpl** contenga los archivos correspondientes
 ## Pasos
 
 <img src="ImgTutorialCS_CART/tuto-1.png" width="400px"/>
@@ -44,3 +44,4 @@
 * [ePayco plugin CS-CART v4.3.8](https://github.com/epayco/Plugin_ePayco_CS_CART/releases/tag/4.3.8).
 * [ePayco plugin CS-CART v5.0.0](https://github.com/epayco/Plugin_ePayco_CS_CART/releases/tag/5.0.0).
 * [ePayco plugin CS-CART v5.1.0](https://github.com/epayco/Plugin_ePayco_CS_CART/releases/tag/5.1.0).
+* [ePayco plugin CS-CART v5.2.0](https://github.com/epayco/Plugin_ePayco_CS_CART/releases/tag/5.2.0).
