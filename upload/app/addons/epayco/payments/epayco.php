@@ -177,6 +177,8 @@ if (defined('PAYMENT_NOTIFICATION')) {
     $server_name = str_replace('/confirmation/epayco/index','/checkout/onepage/success/',$url);
     $new_url = $server_name;
 
+ 
+
     /** @var \Tygh\Location\Manager $location_manager */
     $location_manager = Tygh::$app['location'];
 
@@ -209,6 +211,17 @@ if (defined('PAYMENT_NOTIFICATION')) {
         $type_checkout_mode = "false";
     }
 
+    $tokenResponse = fn_epayco_authenticate($processor_data);
+    $bearerToken = ($tokenResponse && isset($tokenResponse['token'])) ? $tokenResponse['token'] : '';
+   
+
+    // Obtener el token de ePayco para el checkout v2
+    $epayco_token = '';
+    $auth_response = fn_epayco_authenticate($processor_data);
+    if ($auth_response !== false && isset($auth_response['token'])) {
+        $epayco_token = $auth_response['token'];
+    }
+
     $formattedData = array(
         'key' =>  $order_info['payment_method']['processor_params']['p_public_key'],
         'test' => $order_info['payment_method']['processor_params']['p_test_request'],
@@ -219,11 +232,105 @@ if (defined('PAYMENT_NOTIFICATION')) {
         'sub_total' => $p_amount_base,
         'country' => $order_info["b_country"],
         'external' => $type_checkout_mode,
-        'lang' => $order_info["lang_code"]
+        'lang' => $order_info["lang_code"],
+        'epayco_token' => $epayco_token,
+        'email' => $order_info['email'],
+        'firstname' => $order_info['firstname'] . ' ' . $order_info['lastname'],
+        'address' => $location_manager->getLocationField($order_info, 'address', '', BILLING_ADDRESS_PREFIX),
+        'reference' => 'Order-' . $order_id
     );
     $queryParams = http_build_query($formattedData);
     $id_page = "201";
     $url_checkout = fn_url("pages.view&page_id=".$id_page."&");
     header('Location: '.$url_checkout."?".$queryParams);
 }
+
+/**
+ * Genera un Bearer Token para autenticación con ePayco API
+ */
+function fn_epayco_generate_bearer_token($processor_data) {
+    $publicKey = $processor_data['processor_params']['p_public_key'];
+    $privateKey = $processor_data['processor_params']['p_private_key'];
+    
+    $cookie_name = 'epayco_token_' . substr(md5($publicKey), 0, 8);
+    
+    if (!isset($_COOKIE[$cookie_name])) {
+        $token = base64_encode($publicKey . ":" . $privateKey);
+        $bearer_token = $token;
+        setcookie($cookie_name, $bearer_token, time() + (60 * 14), "/");
+    } else {
+        $bearer_token = $_COOKIE[$cookie_name];
+    }
+    
+    return $bearer_token;
+}
+
+/**
+ * Realiza llamadas a la API de ePayco
+ */
+function fn_epayco_api_call($path, $data = array(), $headers = array(), $method = 'POST') {
+    $url = 'https://apify.epayco.co/' . $path;
+    
+    // Preparar datos para cURL
+    $curl_options = array(
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 15,
+        CURLOPT_CUSTOMREQUEST => $method,
+        CURLOPT_HTTPHEADER => array(),
+        CURLOPT_SSL_VERIFYPEER => false
+    );
+    
+    // Configurar headers
+    if (!empty($headers)) {
+        $header_array = array();
+        foreach ($headers as $key => $value) {
+            $header_array[] = $key . ': ' . $value;
+        }
+        $curl_options[CURLOPT_HTTPHEADER] = $header_array;
+    }
+    
+    // Configurar datos para POST
+    if ($method == 'POST' && !empty($data)) {
+        $curl_options[CURLOPT_POSTFIELDS] = json_encode($data);
+    }
+    
+    $ch = curl_init();
+    curl_setopt_array($ch, $curl_options);
+    
+    $response = curl_exec($ch);
+    $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curl_error = curl_error($ch);
+    curl_close($ch);
+    
+    if ($curl_error) {
+        error_log("Error cURL en ePayco API: " . $curl_error);
+        return false;
+    }
+    
+    if ($status_code == 200) {
+        $responseTransaction = json_decode($response, true);
+        return $responseTransaction;
+    } else {
+        error_log("Error en respuesta API ePayco, código: " . $status_code . ", respuesta: " . $response);
+        return false;
+    }
+}
+
+/**
+ * Autentica con ePayco API y obtiene token de acceso
+ */
+function fn_epayco_authenticate($processor_data) {
+    $bearer_token = fn_epayco_generate_bearer_token($processor_data);
+    
+    $headers = array(
+        'Content-Type' => 'application/json',
+        'Authorization' => 'Basic ' . $bearer_token
+    );
+    
+    return fn_epayco_api_call('login', array(), $headers);
+}
+
 exit;
+
+

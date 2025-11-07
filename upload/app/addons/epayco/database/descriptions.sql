@@ -1,2 +1,198 @@
-INSERT INTO `cscart_page_descriptions` (`page_id`, `lang_code`, `page`, `description`, `meta_keywords`, `meta_description`, `page_title`, `link`) VALUES
-(201, 'es', 'checkout epayco', '<style>\n .epayco-title{\n max-width: 900px;\n display: block;\n margin:auto;\n color: #444;\n font-weight: 700;\n margin-bottom: 25px;\n }\n .loader-container{\n position: relative;\n padding: 20px;\n color: #ff5700;\n }\n .epayco-subtitle{\n font-size: 14px;\n }\n .epayco-button-render{\n transition: all 500ms cubic-bezier(0.000, 0.445, 0.150, 1.025);\n transform: scale(1.1);\n box-shadow: 0 0 4px rgba(0,0,0,0);\n }\n .epayco-button-render:hover {\n transform: scale(1.2);\n }\n .animated-points::after{\n content: \"\";\n animation-duration: 2s;\n animation-fill-mode: forwards;\n animation-iteration-count: infinite;\n animation-name: animatedPoints;\n animation-timing-function: linear;\n position: absolute;\n }\n .animated-background {\n animation-duration: 2s;\n animation-fill-mode: forwards;\n animation-iteration-count: infinite;\n animation-name: placeHolderShimmer;\n animation-timing-function: linear;\n color: #f6f7f8;\n background: linear-gradient(to right, #7b7b7b 8%, #999 18%, #7b7b7b 33%);\n background-size: 800px 104px;\n position: relative;\n background-clip: text;\n -webkit-background-clip: text;\n -webkit-text-fill-color: transparent;\n }\n .loading::before{\n -webkit-background-clip: padding-box;\n background-clip: padding-box;\n box-sizing: border-box;\n border-width: 2px;\n border-color: currentColor currentColor currentColor transparent;\n position: absolute;\n margin: auto;\n top: 0;\n left: 0;\n right: 0;\n bottom: 0;\n content: \" \";\n display: inline-block;\n background: center center no-repeat;\n background-size: cover;\n border-radius: 50%;\n border-style: solid;\n width: 30px;\n height: 30px;\n opacity: 1;\n -webkit-animation: loaderAnimation 1s infinite linear,fadeIn 0.5s ease-in-out;\n -moz-animation: loaderAnimation 1s infinite linear, fadeIn 0.5s ease-in-out;\n animation: loaderAnimation 1s infinite linear, fadeIn 0.5s ease-in-out;\n }\n @keyframes animatedPoints{\n 33%{\n content: \".\"\n }\n 66%{\n content: \"..\"\n }\n 100%{\n content: \"...\"\n }\n }\n @keyframes placeHolderShimmer{\n 0%{\n background-position: -800px 0\n }\n 100%{\n background-position: 800px 0\n }\n }\n  @keyframes loaderAnimation{\n 0%{\n -webkit-transform:rotate(0);\n transform:rotate(0);\n animation-timing-function:cubic-bezier(.55,.055,.675,.19)\n }\n 50%{\n -webkit-transform:rotate(180deg);\n transform:rotate(180deg);\n animation-timing-function:cubic-bezier(.215,.61,.355,1)\n }\n 100%{\n -webkit-transform:rotate(360deg);\n transform:rotate(360deg)\n }\n }\n </style>\n<div> \n <div class=\"loader-container\">\n <div class=\"loading\"></div>\n </div>\n <p style=\"text-align: center;\" class=\"epayco-title\">\n <span class=\"animated-points\">Cargando métodos de pago</span>\n <br><small class=\"epayco-subtitle\">Si no se cargan automáticamente, de clic en el botón \"Pagar con ePayco</small>\n </p>\n  </div>\n<p> </p>\n<p></p>\n<p></p><center><br> <a id=\"btn_epayco\" href=\"#\"><br> <img src=\"https://multimedia.epayco.co/epayco-landing/btns/Boton-epayco-color1.png\"><br> </a><br> </center><p></p>\n<p></p>\n<script type=\"text/javascript\" src=\"https://checkout.epayco.co/checkout.js\"></script>\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js\"></script>\n<script> \n function getQueryParam(param) {\n location.search.substr(1)\n .split(\"&\")\n .some(function(item) {\n return item.split(\"=\")[0] == param && (param = item.split(\"=\")[1])\n })\n return param\n }\n $(document).ready(function() {\n var p_public_key = getQueryParam(\'key\');\n if(p_public_key == \'key\'){\n   const oldKey = window.location.href.replace(\"?key\", \"&key\");\n   let params = new URLSearchParams(oldKey)\n   p_public_key = params.get(\'key\')\n }\n var test = getQueryParam(\'test\'); \n var description = getQueryParam(\'description\');\n var order_id = getQueryParam(\'order_id\'); \n var currency = getQueryParam(\'currency\'); \n var total = getQueryParam(\'total\'); \n var tax = getQueryParam(\'tax\'); \n var sub_total = getQueryParam(\'sub_total\');\n var country = getQueryParam(\'country\'); \n var external = getQueryParam(\'external\'); \n var url = window.location.origin+window.location.pathname+\"?dispatch=\"\n const newUrl = url.replace(\"checkout-epayco/\", \"index.php\");\n var lang = getQueryParam(\'lang\'); \n var handler = ePayco.checkout.configure({\n key: p_public_key,\n test: test\n });\n var data={\n name: \"Order #\"+order_id,\n description: \"Order #\"+order_id,\n invoice: order_id,\n currency: currency,\n amount: total,\n tax_base: sub_total,\n tax: tax,\n country: country,\n lang: lang,\n external: external,\n extra1: order_id,\n confirmation: newUrl+\"payment_notification.confirmation&payment=epayco&order_id=\"+order_id,\n response: newUrl+\"payment_notification.response&payment=epayco&order_id=\"+order_id,\n }\n var openChekout = function () {\n handler.open(data);\n }\n handler.open(data);\n var bntPagar = document.getElementById(\"btn_epayco\");\n bntPagar.addEventListener(\"click\", openChekout);\n window.onload = function() {\n    document.addEventListener(\"contextmenu\", function(e){\n        e.preventDefault();\n    }, false);\n}\n    $(document).keydown(function (event) {\n        if (event.keyCode == 123) {\n            return false;\n        } else if (event.ctrlKey && event.shiftKey && event.keyCode == 73) {\n            return false;\n        }\n    });\n  })</script>', 'checkout epayco', 'checkout epayco', 'checkout epayco', '');
+INSERT INTO `cscart_page_descriptions` (`page_id`, `lang_code`, `page`, `description`, `meta_keywords`, `meta_description`, `page_title`, `link`) 
+VALUES (201, 'es', 'checkout epayco', 
+'<style>
+ .epayco-title{
+ max-width: 900px;
+ display: block;
+ margin:auto;
+ color: #444;
+ font-weight: 700;
+ margin-bottom: 25px;
+ }
+ .loader-container{
+ position: relative;
+ padding: 20px;
+ color: #ff5700;
+ }
+ .epayco-subtitle{
+ font-size: 14px;
+ }
+ .epayco-button-render{
+ transition: all 500ms cubic-bezier(0.000, 0.445, 0.150, 1.025);
+ transform: scale(1.1);
+ box-shadow: 0 0 4px rgba(0,0,0,0);
+ }
+ .epayco-button-render:hover {
+ transform: scale(1.2);
+ }
+ .animated-points::after{
+ content: "";
+ animation-duration: 2s;
+ animation-fill-mode: forwards;
+ animation-iteration-count: infinite;
+ animation-name: animatedPoints;
+ animation-timing-function: linear;
+ position: absolute;
+ }
+ .animated-background {
+ animation-duration: 2s;
+ animation-fill-mode: forwards;
+ animation-iteration-count: infinite;
+ animation-name: placeHolderShimmer;
+ animation-timing-function: linear;
+ color: #f6f7f8;
+ background: linear-gradient(to right, #7b7b7b 8%, #999 18%, #7b7b7b 33%);
+ background-size: 800px 104px;
+ position: relative;
+ background-clip: text;
+ -webkit-background-clip: text;
+ -webkit-text-fill-color: transparent;
+ }
+ .loading::before{
+ -webkit-background-clip: padding-box;
+ background-clip: padding-box;
+ box-sizing: border-box;
+ border-width: 2px;
+ border-color: currentColor currentColor currentColor transparent;
+ position: absolute;
+ margin: auto;
+ top: 0;
+ left: 0;
+ right: 0;
+ bottom: 0;
+ content: " ";
+ display: inline-block;
+ background: center center no-repeat;
+ background-size: cover;
+ border-radius: 50%;
+ border-style: solid;
+ width: 30px;
+ height: 30px;
+ opacity: 1;
+ -webkit-animation: loaderAnimation 1s infinite linear,fadeIn 0.5s ease-in-out;
+ -moz-animation: loaderAnimation 1s infinite linear, fadeIn 0.5s ease-in-out;
+ animation: loaderAnimation 1s infinite linear, fadeIn 0.5s ease-in-out;
+ }
+ @keyframes animatedPoints{
+ 33%{
+ content: "."
+ }
+ 66%{
+ content: ".."
+ }
+ 100%{
+ content: "..."
+ }
+ }
+ @keyframes placeHolderShimmer{
+ 0%{
+ background-position: -800px 0
+ }
+ 100%{
+ background-position: 800px 0
+ }
+ }
+ @keyframes loaderAnimation{
+ 0%{
+ -webkit-transform:rotate(0);
+ transform:rotate(0);
+ animation-timing-function:cubic-bezier(.55,.055,.675,.19)
+ }
+ 50%{
+ -webkit-transform:rotate(180deg);
+ transform:rotate(180deg);
+ animation-timing-function:cubic-bezier(.215,.61,.355,1)
+ }
+ 100%{
+ -webkit-transform:rotate(360deg);
+ transform:rotate(360deg)
+ }
+ }
+ </style>
+<div> 
+ <div class="loader-container">
+ <div class="loading"></div>
+ </div>
+ <p style="text-align: center;" class="epayco-title">
+ <span class="animated-points">Cargando métodos de pago</span>
+ <br><small class="epayco-subtitle">Si no se cargan automáticamente, de clic en el botón "Pagar con ePayco</small>
+ </p>
+    </div>
+<p> </p>
+<p></p>
+<p></p>
+<center>
+<br> 
+<a id="btn_epayco" href="#">
+<br> 
+<img src="https://cdn.pixabay.com/photo/2015/07/25/08/05/the-button-859351_1280.png">
+<br> 
+</a>
+<br> 
+</center>
+<p></p>
+<p></p>
+<script src="https://epayco-checkout-testing.s3.amazonaws.com/checkout.preprod-v2.js"></script>
+<script>
+// Obtener parámetros de la URL
+function getQueryParam(param) {
+        let params = new URLSearchParams(window.location.search);
+        return params.get(param);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+        var p_public_key = getQueryParam('key');
+        var test = getQueryParam('test');
+        var order_id = getQueryParam('order_id');
+        var currency = getQueryParam('currency');
+        var total = getQueryParam('total');
+        var tax = getQueryParam('tax');
+        var sub_total = getQueryParam('sub_total');
+        var country = getQueryParam('country');
+        var lang = getQueryParam('lang');
+        var external = getQueryParam('external');
+        var url = window.location.origin+window.location.pathname+"?dispatch=";
+        var confirmationUrl = url.replace("checkout-epayco/", "index.php")+"payment_notification.confirmation&payment=epayco&order_id="+order_id;
+        var responseUrl = url.replace("checkout-epayco/", "index.php")+"payment_notification.response&payment=epayco&order_id="+order_id;
+
+        // Configuración para el nuevo widget v2
+        window.epayco.checkoutV2.init({
+                key: p_public_key,
+                test: test === 'true' || test === '1',
+                payment: {
+                        name: "Order #"+order_id,
+                        description: "Order #"+order_id,
+                        invoice: order_id,
+                        currency: currency,
+                        amount: total,
+                        tax_base: sub_total,
+                        tax: tax,
+                        country: country,
+                        lang: lang,
+                        external: external,
+                        extra1: order_id,
+                        confirmation: confirmationUrl,
+                        response: responseUrl
+                },
+                onReady: function() {
+                        // Opcional: ocultar loader, mostrar botón, etc.
+                },
+                onError: function(error) {
+                        alert('Error al cargar ePayco: ' + error.message);
+                }
+        });
+
+        // Botón para abrir el checkout manualmente
+        var btn = document.getElementById('btn_epayco');
+        if (btn) {
+                btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        window.epayco.checkoutV2.open();
+                });
+        }
+
+        // Abrir automáticamente el checkout
+        window.epayco.checkoutV2.open();
+});
+</script>
+'checkout epayco', 'checkout epayco', 'checkout epayco', '');
