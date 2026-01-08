@@ -78,9 +78,11 @@ class Response extends AbstractResponse implements RedirectResponseInterface
         }
 
         if($publicKey == '' || $privateKey == ''){
+            error_log('EPAYCO ERROR: Public key o Private key vacías');
             throw new \InvalidArgumentException('Public key and Private key are required');
         }
         if(empty($payload)){
+            error_log('EPAYCO ERROR: Payload está vacío');
             throw new \InvalidArgumentException('Payload is required');
         }
         $data['checkoutmode'] = $checkoutmode;
@@ -91,6 +93,8 @@ class Response extends AbstractResponse implements RedirectResponseInterface
             // Use the bearer token for further API calls
             $token_session = $tokenResponse['sessionId'];
             $data['sessionId'] = $token_session;
+        }else{
+            error_log('EPAYCO ERROR: No se pudo obtener token de sesión');
         }
         return $data;
     }
@@ -289,25 +293,32 @@ class Response extends AbstractResponse implements RedirectResponseInterface
         } else {
             $bearer_token = $_COOKIE[$publicKey];
         }
+        
         $headers = "Authorization: Basic {$bearer_token}";
-        return $this->apiService("login", [],'POST', $headers);
+        $response = $this->apiService("login", [],'POST', $headers);
+        
+        return $response;
     }
 
     public function getPaymentSessionId($publicKey, $privateKey, $payload)
     {
-        $tokenResponse = $this->epyacoBerarToken($publicKey, $privateKey);
-        $bearerToken = ($tokenResponse && isset($tokenResponse->token)) ? $tokenResponse->token : '';
         if(!$bearerToken){
+            error_log('EPAYCO ERROR: No se pudo obtener bearer token');
             return $this->formatErrorMessage($tokenResponse);
         }
+        
         $path = "payment/session/create";
         $headers = "Authorization: Bearer {$bearerToken}";
-        $epayco_status_session =  $this->apiService($path, $payload,'POST', $headers);
+        $epayco_status_session = $this->apiService($path, $payload, 'POST', $headers);
 
         if ($epayco_status_session && isset($epayco_status_session->success) && $epayco_status_session->success) {
             $token_session = $epayco_status_session->data->sessionId;
             return [
                 "success"=>true,
+                "sessionId"=>$token_session,
+            ];
+        } else {
+            error_log('EPAYCO ERROR: No se pudo crear session ID');"success"=>true,
                 "sessionId"=>$token_session,
             ];
         } else {
@@ -341,12 +352,7 @@ class Response extends AbstractResponse implements RedirectResponseInterface
             "success"=>false,
             "message"=>$processReturnFailMessage,
         ];
-    }
-
-    public function apiService($url, $data, $type, $cabecera = null)
-    {
-        
-        $header = [
+    }$header = [
             "Cache-Control: no-cache",
             "Accept: application/json",
             "Content-Type: application/json",
@@ -363,6 +369,7 @@ class Response extends AbstractResponse implements RedirectResponseInterface
             $bvaseUrl = $this->apify;
             $url = "{$bvaseUrl}/{$url}";
             $jsonData = json_encode($data);
+            
             $curl = curl_init();
             curl_setopt_array($curl, array(
                 CURLOPT_URL => $url,
@@ -377,9 +384,18 @@ class Response extends AbstractResponse implements RedirectResponseInterface
                 CURLOPT_CUSTOMREQUEST => $type,
                 CURLOPT_POSTFIELDS => $jsonData,
             ));
+            
             $resp = curl_exec($curl);
+            
             if ($resp === false) {
+                error_log('EPAYCO ERROR: cURL - ' . curl_error($curl));
                 return array('curl_error' => curl_error($curl), 'curerrno' => curl_errno($curl));
+            }
+            curl_close($curl);
+            
+            return json_decode($resp);
+        } catch (\Exception $exception) {
+            error_log('EPAYCO ERROR: Exception - ' . $exception->getMessage()); => curl_error($curl), 'curerrno' => curl_errno($curl));
             }
             curl_close($curl);
             return json_decode($resp);
