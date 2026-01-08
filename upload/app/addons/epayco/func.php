@@ -47,7 +47,7 @@ function fn_epayco_user_init(&$auth, &$user_info, &$first_init)
     foreach ($orders_list as $order_id) {
         if (fn_is_epayco_ipn_received($order_id)) {
             fn_clear_cart(Tygh::$app['session']['cart']);
-            fn_epayco_order_total_is_correct($order_id);
+            // Removed fn_epayco_order_total_is_correct() call - Omnipay handles redirects
             break;
         }
     }
@@ -61,55 +61,14 @@ function fn_epayco_user_init(&$auth, &$user_info, &$first_init)
  * @param int $order_id The identifier of the order.
  *
  * @return bool True if the order total is correct and matches the session's order total; false otherwise.
+ * 
+ * @deprecated This function is no longer used. Omnipay handles payment redirects automatically.
  */
 function fn_epayco_order_total_is_correct($order_id)
 {
-    $order_info = fn_get_order_info($order_id);
-    $p_tax = 0;
-    $indice =array_keys($order_info["taxes"]);
-    if($order_info["taxes"][$indice[0]]["tax_subtotal"] != 0) {
-        $p_tax = $order_info["taxes"][$indice[0]]["tax_subtotal"];
-    }
-    $p_amount_base = 0;
-    if($p_tax != 0) {
-        $p_amount_base = $order_info['total'] - $p_tax;
-    }
-
-    $i = 0;
-    $p_description = "";
-    foreach ($order_info['products'] as $k => $v) {
-        $i++;
-        $p_description .= $v['product'];
-
-        if($i != count($order_info['products'])) {
-            $p_description .= "; ";
-        }
-    }
-
-    $type_checkout = $order_info['payment_method']['processor_params']['p_type_checkout'];
-    if($type_checkout == "TRUE"){
-        $type_checkout_mode = "true";
-    }else{
-        $type_checkout_mode = "false";
-    }
-
-    $formattedData = array(
-        'key' =>  $order_info['payment_method']['processor_params']['p_public_key'],
-        'test' => $order_info['payment_method']['processor_params']['p_test_request'],
-        'order_id' => $order_id,
-        'currency' => $order_info['secondary_currency'],
-        'total' => $order_info['total'],
-        'tax' => $p_tax,
-        'sub_total' => $p_amount_base,
-        'country' => $order_info["b_country"],
-        'external' => $type_checkout_mode,
-        'lang' => $order_info["lang_code"]
-    );
-    $queryParams = http_build_query($formattedData);
-    $id_page = "201";
-    $url_checkout = fn_url("pages.view&page_id=".$id_page."&");
-    header('Location: '.$url_checkout."?".$queryParams);
-
+    // This function has been deprecated.
+    // Payment redirects are now handled by Omnipay in epayco.php
+    return true;
 }
 
 function fn_epayco_prepare_checkout_payment_methods(&$cart, &$auth, &$payment_groups)
@@ -153,7 +112,7 @@ function fn_epayco_is_user_exists_post($user_id, $user_data, &$is_exist)
     $orders_list = array();
     if (!empty(Tygh::$app['session']['cart']['processed_order_id'])) {
         $order_id = array_merge($orders_list, (array)Tygh::$app['session']['cart']['processed_order_id']);
-        fn_epayco_order_total_is_correct($order_id[0]);
+        // Removed fn_epayco_order_total_is_correct() call - Omnipay handles redirects
     }
 
 }
