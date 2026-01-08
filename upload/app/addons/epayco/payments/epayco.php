@@ -60,7 +60,7 @@ if ($is_payment_notification) {
         $confirmation = true;
     }else{
         // Redirección de ePayco - validar contra el servidor de ePayco
-        $url = 'https://secure.epayco.io/validation/v1/reference/'.$ref_payco;
+        $url = 'https://eks-checkout-service.epayco.io/validation/v1/reference/'.$ref_payco;
         $responseData = @file_get_contents($url);
         
         if($responseData){
