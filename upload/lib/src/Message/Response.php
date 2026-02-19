@@ -65,7 +65,7 @@ class Response extends AbstractResponse implements RedirectResponseInterface
             }  
             
             if($key == 'payload'){
-                $payload = $value;  
+                $payload = $value;
             }
 
             if($key == 'checkoutmode'){
@@ -85,12 +85,17 @@ class Response extends AbstractResponse implements RedirectResponseInterface
         }
         $data['checkoutmode'] = $checkoutmode;
         $data['testMode'] = $test;
+        
         $tokenResponse = $this->getPaymentSessionId($publicKey, $privateKey, $payload);
+        
         $bearerToken = ($tokenResponse && isset($tokenResponse['success'])) ? $tokenResponse['success'] : '';
+        
         if($bearerToken){
             // Use the bearer token for further API calls
             $token_session = $tokenResponse['sessionId'];
             $data['sessionId'] = $token_session;
+        }else{
+            error_log('EPAYCO Response: NO hay bearerToken - sessionId no será asignada');
         }
         return $data;
     }
@@ -124,6 +129,10 @@ class Response extends AbstractResponse implements RedirectResponseInterface
     {
         $hiddenFields = '';
         foreach ($this->getRedirectData() as $key => $value) {
+            // Si value es un array, convertirlo a JSON
+            if (is_array($value)) {
+                $value = json_encode($value);
+            }
             $hiddenFields .= sprintf(
                 '<input type="hidden" name="%1$s" value="%2$s" />',
                 htmlentities($key, ENT_QUOTES, 'UTF-8', false),
@@ -281,6 +290,7 @@ class Response extends AbstractResponse implements RedirectResponseInterface
 
     public function epyacoBerarToken($publicKey,$privateKey)
     {
+        
         if (!isset($_COOKIE[$publicKey])) {
             $token = base64_encode($publicKey . ":" . $privateKey);
             $bearer_token = $token;
@@ -289,20 +299,29 @@ class Response extends AbstractResponse implements RedirectResponseInterface
         } else {
             $bearer_token = $_COOKIE[$publicKey];
         }
+        
         $headers = "Authorization: Basic {$bearer_token}";
-        return $this->apiService("login", [],'POST', $headers);
+        
+        $response = $this->apiService("login", [],'POST', $headers);
+        
+        return $response;
     }
 
     public function getPaymentSessionId($publicKey, $privateKey, $payload)
     {
+        
         $tokenResponse = $this->epyacoBerarToken($publicKey, $privateKey);
+        
         $bearerToken = ($tokenResponse && isset($tokenResponse->token)) ? $tokenResponse->token : '';
+        
         if(!$bearerToken){
             return $this->formatErrorMessage($tokenResponse);
         }
+        
         $path = "payment/session/create";
         $headers = "Authorization: Bearer {$bearerToken}";
-        $epayco_status_session =  $this->apiService($path, $payload,'POST', $headers);
+        
+        $epayco_status_session = $this->apiService($path, $payload, 'POST', $headers);
 
         if ($epayco_status_session && isset($epayco_status_session->success) && $epayco_status_session->success) {
             $token_session = $epayco_status_session->data->sessionId;
@@ -362,7 +381,9 @@ class Response extends AbstractResponse implements RedirectResponseInterface
             }
             $bvaseUrl = $this->apify;
             $url = "{$bvaseUrl}/{$url}";
+            
             $jsonData = json_encode($data);
+            
             $curl = curl_init();
             curl_setopt_array($curl, array(
                 CURLOPT_URL => $url,
@@ -377,12 +398,17 @@ class Response extends AbstractResponse implements RedirectResponseInterface
                 CURLOPT_CUSTOMREQUEST => $type,
                 CURLOPT_POSTFIELDS => $jsonData,
             ));
+            
             $resp = curl_exec($curl);
+            
             if ($resp === false) {
                 return array('curl_error' => curl_error($curl), 'curerrno' => curl_errno($curl));
             }
             curl_close($curl);
-            return json_decode($resp);
+            
+            $decoded = json_decode($resp);
+            
+            return $decoded;
         } catch (\Exception $exception) {
             return [
                 "success" => false,

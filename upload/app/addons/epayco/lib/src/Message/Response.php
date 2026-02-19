@@ -49,7 +49,6 @@ class Response extends AbstractResponse implements RedirectResponseInterface
 
     public function getToken()
     {
-        error_log('EPAYCO Response::getToken() - Iniciando');
         $publicKey = '';
         $privateKey = '';
         $checkoutmode = '';
@@ -60,56 +59,44 @@ class Response extends AbstractResponse implements RedirectResponseInterface
 
             if($key == 'public_key'){
                 $publicKey = $value;
-                error_log('EPAYCO Response: publicKey encontrada = ' . $publicKey);
             }
             if($key == 'private_key'){
                 $privateKey = $value;
-                error_log('EPAYCO Response: privateKey encontrada = ' . $privateKey);
             }  
             
             if($key == 'payload'){
                 $payload = $value;
-                error_log('EPAYCO Response: payload = ' . print_r($payload, true));
             }
 
             if($key == 'checkoutmode'){
                 $checkoutmode = $value;
-                error_log('EPAYCO Response: checkoutmode = ' . $checkoutmode);
             }
 
             if($key == 'testMode'){
                 $test = $value;
-                error_log('EPAYCO Response: testMode = ' . ($test ? 'true' : 'false'));
             }
         }
 
         if($publicKey == '' || $privateKey == ''){
-            error_log('EPAYCO ERROR: publicKey o privateKey vacías');
             throw new \InvalidArgumentException('Public key and Private key are required');
         }
         if(empty($payload)){
-            error_log('EPAYCO ERROR: payload está vacío');
             throw new \InvalidArgumentException('Payload is required');
         }
         $data['checkoutmode'] = $checkoutmode;
         $data['testMode'] = $test;
         
-        error_log('EPAYCO Response: Llamando a getPaymentSessionId()');
         $tokenResponse = $this->getPaymentSessionId($publicKey, $privateKey, $payload);
-        error_log('EPAYCO Response: Respuesta de getPaymentSessionId = ' . print_r($tokenResponse, true));
         
         $bearerToken = ($tokenResponse && isset($tokenResponse['success'])) ? $tokenResponse['success'] : '';
-        error_log('EPAYCO Response: bearerToken = ' . $bearerToken);
         
         if($bearerToken){
             // Use the bearer token for further API calls
             $token_session = $tokenResponse['sessionId'];
             $data['sessionId'] = $token_session;
-            error_log('EPAYCO Response: sessionId asignada = ' . $token_session);
         }else{
             error_log('EPAYCO Response: NO hay bearerToken - sessionId no será asignada');
         }
-        error_log('EPAYCO Response::getToken() - Retornando data = ' . print_r($data, true));
         return $data;
     }
 
@@ -303,63 +290,46 @@ class Response extends AbstractResponse implements RedirectResponseInterface
 
     public function epyacoBerarToken($publicKey,$privateKey)
     {
-        error_log('EPAYCO epyacoBerarToken() - Iniciando');
         
         if (!isset($_COOKIE[$publicKey])) {
-            error_log('EPAYCO epyacoBerarToken() - Cookie no existe, creando token');
             $token = base64_encode($publicKey . ":" . $privateKey);
             $bearer_token = $token;
             $cookie_value = $bearer_token;
             setcookie($publicKey, $cookie_value, time() + (60 * 14), "/");
-            error_log('EPAYCO epyacoBerarToken() - Token creado: ' . substr($token, 0, 20) . '...');
         } else {
-            error_log('EPAYCO epyacoBerarToken() - Usando cookie existente');
             $bearer_token = $_COOKIE[$publicKey];
         }
         
         $headers = "Authorization: Basic {$bearer_token}";
-        error_log('EPAYCO epyacoBerarToken() - Llamando a apiService con path: login');
         
         $response = $this->apiService("login", [],'POST', $headers);
-        error_log('EPAYCO epyacoBerarToken() - Respuesta: ' . print_r($response, true));
         
         return $response;
     }
 
     public function getPaymentSessionId($publicKey, $privateKey, $payload)
     {
-        error_log('EPAYCO getPaymentSessionId() - Iniciando');
-        error_log('EPAYCO getPaymentSessionId() - publicKey: ' . $publicKey);
-        error_log('EPAYCO getPaymentSessionId() - privateKey: ' . $privateKey);
         
         $tokenResponse = $this->epyacoBerarToken($publicKey, $privateKey);
-        error_log('EPAYCO getPaymentSessionId() - tokenResponse: ' . print_r($tokenResponse, true));
         
         $bearerToken = ($tokenResponse && isset($tokenResponse->token)) ? $tokenResponse->token : '';
-        error_log('EPAYCO getPaymentSessionId() - bearerToken: ' . $bearerToken);
         
         if(!$bearerToken){
-            error_log('EPAYCO getPaymentSessionId() - ERROR: No hay bearerToken');
             return $this->formatErrorMessage($tokenResponse);
         }
         
         $path = "payment/session/create";
         $headers = "Authorization: Bearer {$bearerToken}";
-        error_log('EPAYCO getPaymentSessionId() - Llamando a apiService con path: ' . $path);
-        error_log('EPAYCO getPaymentSessionId() - payload: ' . print_r($payload, true));
         
         $epayco_status_session = $this->apiService($path, $payload, 'POST', $headers);
-        error_log('EPAYCO getPaymentSessionId() - Respuesta de apiService: ' . print_r($epayco_status_session, true));
 
         if ($epayco_status_session && isset($epayco_status_session->success) && $epayco_status_session->success) {
             $token_session = $epayco_status_session->data->sessionId;
-            error_log('EPAYCO getPaymentSessionId() - sessionId creada: ' . $token_session);
             return [
                 "success"=>true,
                 "sessionId"=>$token_session,
             ];
         } else {
-            error_log('EPAYCO getPaymentSessionId() - ERROR: No hay success en respuesta');
             return $this->formatErrorMessage($epayco_status_session);
         }
     }
@@ -394,7 +364,6 @@ class Response extends AbstractResponse implements RedirectResponseInterface
 
     public function apiService($url, $data, $type, $cabecera = null)
     {
-        error_log('EPAYCO apiService() - Iniciando con url: ' . $url . ', type: ' . $type);
         
         $header = [
             "Cache-Control: no-cache",
@@ -412,10 +381,8 @@ class Response extends AbstractResponse implements RedirectResponseInterface
             }
             $bvaseUrl = $this->apify;
             $url = "{$bvaseUrl}/{$url}";
-            error_log('EPAYCO apiService() - URL completa: ' . $url);
             
             $jsonData = json_encode($data);
-            error_log('EPAYCO apiService() - JSON payload: ' . $jsonData);
             
             $curl = curl_init();
             curl_setopt_array($curl, array(
@@ -433,20 +400,16 @@ class Response extends AbstractResponse implements RedirectResponseInterface
             ));
             
             $resp = curl_exec($curl);
-            error_log('EPAYCO apiService() - Respuesta bruta: ' . $resp);
             
             if ($resp === false) {
-                error_log('EPAYCO apiService() - ERROR CURL: ' . curl_error($curl));
                 return array('curl_error' => curl_error($curl), 'curerrno' => curl_errno($curl));
             }
             curl_close($curl);
             
             $decoded = json_decode($resp);
-            error_log('EPAYCO apiService() - Respuesta decodificada: ' . print_r($decoded, true));
             
             return $decoded;
         } catch (\Exception $exception) {
-            error_log('EPAYCO apiService() - EXCEPTION: ' . $exception->getMessage());
             return [
                 "success" => false,
                 "titleResponse" => "error",
