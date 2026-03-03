@@ -53,7 +53,7 @@ if ($is_payment_notification) {
         $confirmation = true;
     } else {
         // ePayco redirect - validate against ePayco server
-        $url = 'https://eks-checkout-service.epayco.io/validation/v1/reference/' . $ref_payco;
+        $url = 'https://secure.epayco.co/validation/v1/reference/' . $ref_payco;
         $responseData = @file_get_contents($url);
 
         if ($responseData) {
@@ -368,7 +368,7 @@ if ($is_payment_notification) {
         ]
     )->send();
 
-    // Process the response
+  // Process the response
     if ($response->isRedirect()) {
         // Redirect to ePayco form
         error_log('EPAYCO: Enviando a checkout de ePayco');
