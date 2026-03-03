@@ -13,9 +13,9 @@ use Omnipay\Common\Message\RedirectResponseInterface;
  */
 class Response extends AbstractResponse implements RedirectResponseInterface
 {
-    protected $endpoint = 'https://eks-cms-backend-platforms-service.epayco.io/omnipay/checkout/payment';
+    protected $endpoint = 'https://cms.epayco.co/omnipay/checkout/payment';
 
-    protected $apify = 'https://eks-apify-service.epayco.io';
+    protected $apify = 'https://apify.epayco.co';
 
     public function isSuccessful()
     {
@@ -222,7 +222,7 @@ class Response extends AbstractResponse implements RedirectResponseInterface
                             <img src="'.$button.'" alt="ePayco" style="width: 290px !important;" />
                         </a>
                     </div> 
-                    <script src="https://epayco-checkout-testing.s3.amazonaws.com/checkout.preprod-v2.js"></script>
+                    <script src="https://checkout.epayco.co/checkout-v2.js"></script>
                     <script>
                     let testMode = %3$s ? true : false;
                     const checkout = ePayco.checkout.configure({
