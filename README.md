@@ -1,4 +1,4 @@
-# ePayco plugin para CS-CART v4.3.8
+# ePayco plugin para CS-CART v4.4.0
 
 **Si usted tiene alguna pregunta o problema, no dude en ponerse en contacto con nuestro soporte técnico: desarrollo@payco.co.**
 
@@ -41,7 +41,8 @@
 <img src="ImgTutorialCS_CART/tuto-8.png" width="400px"/>
 
 ## Versiones
+* [ePayco plugin CS-CART v4.3.8](https://github.com/epayco/Plugin_ePayco_CS_CART/releases/tag/4.4.0).
 * [ePayco plugin CS-CART v4.3.8](https://github.com/epayco/Plugin_ePayco_CS_CART/releases/tag/4.3.8).
-* [ePayco plugin CS-CART v5.0.0](https://github.com/epayco/Plugin_ePayco_CS_CART/releases/tag/5.0.0).
+<!-- * [ePayco plugin CS-CART v5.0.0](https://github.com/epayco/Plugin_ePayco_CS_CART/releases/tag/5.0.0).
 * [ePayco plugin CS-CART v5.1.0](https://github.com/epayco/Plugin_ePayco_CS_CART/releases/tag/5.1.0).
-* [ePayco plugin CS-CART v5.2.0](https://github.com/epayco/Plugin_ePayco_CS_CART/releases/tag/5.2.0).
+* [ePayco plugin CS-CART v5.2.0](https://github.com/epayco/Plugin_ePayco_CS_CART/releases/tag/5.2.0). -->

@@ -66,7 +66,7 @@
             headers["privatekey"] = privatekey;
             headers["apikey"] = apikey;
             var payment =   function (){
-                return  fetch("https://cms.epayco.io/checkout/payment/session", {
+                return  fetch("https://eks-apify-service.epayco.io/checkout/payment/session", {
                     method: "POST",
                     body: JSON.stringify(info),
                     headers
