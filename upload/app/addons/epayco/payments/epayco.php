@@ -140,7 +140,7 @@ if ($is_payment_notification) {
                     }
                     break;
                 case 3: {
-                        $pp_response['order_status'] = 'Y';
+                        $pp_response['order_status'] = 'B';
                     }
                     break;
                 case 4: {
