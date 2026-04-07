@@ -1,38 +1,31 @@
 <?php
 /***************************************************************************
-*                                                                          *
-*   (c) 2004 Vladimir V. Kalynyak, Alexey V. Vinokurov, Ilya M. Shalnev    *
-*                                                                          *
-* This  is  commercial  software,  only  users  who have purchased a valid *
-* license  and  accept  to the terms of the  License Agreement can install *
-* and use this program.                                                    *
-*                                                                          *
-****************************************************************************
-* PLEASE READ THE FULL TEXT  OF THE SOFTWARE  LICENSE   AGREEMENT  IN  THE *
-* "copyright.txt" FILE PROVIDED WITH THIS DISTRIBUTION PACKAGE.            *
-****************************************************************************/
+ *                                                                          *
+ *   (c) 2004 Vladimir V. Kalynyak, Alexey V. Vinokurov, Ilya M. Shalnev    *
+ *                                                                          *
+ * This  is  commercial  software,  only  users  who have purchased a valid *
+ * license  and  accept  to the terms of the  License Agreement can install *
+ * and use this program.                                                    *
+ *                                                                          *
+ ****************************************************************************
+ * PLEASE READ THE FULL TEXT  OF THE SOFTWARE  LICENSE   AGREEMENT  IN  THE *
+ * "copyright.txt" FILE PROVIDED WITH THIS DISTRIBUTION PACKAGE.            *
+ ****************************************************************************/
 
-use Tygh\Registry;
+use Tygh\Enum\ImagePairTypes;
+use Tygh\Enum\SiteArea;
+use Tygh\Enum\YesNo;
+use Tygh\Providers\StorefrontProvider;
 use Tygh\Settings;
-use Tygh\Http;
 
 if (!defined('BOOTSTRAP')) { die('Access denied'); }
 
-function fn_epayco_uninstall_payment_processors() 
-{
-    db_query("DELETE FROM ?:payment_descriptions WHERE payment_id IN (SELECT payment_id FROM ?:payments WHERE processor_id IN (SELECT processor_id FROM ?:payment_processors WHERE processor_script IN ('epayco.php')))");
-    db_query("DELETE FROM ?:payments WHERE processor_id IN (SELECT processor_id FROM ?:payment_processors WHERE processor_script IN ('epayco.php'))");
-    db_query("DELETE FROM ?:payment_processors WHERE processor_script IN ('epayco.php')");
-}
 
-function fn_epayco_uninstall_pages_processors()
+function fn_epayco_delete_payment_processors()
 {
-    db_query("DELETE FROM ?:pages WHERE page_id IN ('201')");
-}
-
-function fn_epayco_uninstall_page_descriptions_processors()
-{
-    db_query("DELETE FROM ?:page_descriptions WHERE page_id IN ('201')");
+    db_query("DELETE FROM ?:payment_descriptions WHERE payment_id IN (SELECT payment_id FROM ?:payments WHERE processor_id IN (SELECT processor_id FROM ?:payment_processors WHERE processor_script IN ('epayco.php', 'epayco_pro.php', 'payflow_pro.php', 'epayco.php', 'epayco_advanced.php')))");
+    db_query("DELETE FROM ?:payments WHERE processor_id IN (SELECT processor_id FROM ?:payment_processors WHERE processor_script IN ('epayco.php', 'epayco_pro.php', 'payflow_pro.php', 'epayco.php', 'epayco_advanced.php'))");
+    db_query("DELETE FROM ?:payment_processors WHERE processor_script IN ('epayco.php', 'epayco_pro.php', 'payflow_pro.php', 'epayco.php', 'epayco_advanced.php')");
 }
 
 /**
@@ -54,27 +47,12 @@ function fn_epayco_user_init(&$auth, &$user_info, &$first_init)
     foreach ($orders_list as $order_id) {
         if (fn_is_epayco_ipn_received($order_id)) {
             fn_clear_cart(Tygh::$app['session']['cart']);
-             fn_epayco_order_total_is_correct($order_id);
+            // Removed fn_epayco_order_total_is_correct() call - Omnipay handles redirects
             break;
         }
     }
 }
 
-
-/**
- * Checks if Epayco IPN for the order is received by searching for the IPN receiving time
- * in the order's payment information.
- *
- * @param int $order_id The identifier of the order.
- *
- * @return bool True if IPN was received
- */
-function fn_is_epayco_ipn_received($order_id)
-{
-    $order_info = fn_get_order_info($order_id);
-
-    return $order_info['payment_method']['payment'] == "ePayco";
-}
 
 /**
  * Checks the total of the specified order against the session's order total to make sure
@@ -83,55 +61,14 @@ function fn_is_epayco_ipn_received($order_id)
  * @param int $order_id The identifier of the order.
  *
  * @return bool True if the order total is correct and matches the session's order total; false otherwise.
+ * 
+ * @deprecated This function is no longer used. Omnipay handles payment redirects automatically.
  */
 function fn_epayco_order_total_is_correct($order_id)
 {
-    $order_info = fn_get_order_info($order_id);
-    $p_tax = 0;
-    $indice =array_keys($order_info["taxes"]);
-    if($order_info["taxes"][$indice[0]]["tax_subtotal"] != 0) {
-        $p_tax = $order_info["taxes"][$indice[0]]["tax_subtotal"];
-    }
-    $p_amount_base = 0;
-    if($p_tax != 0) {
-        $p_amount_base = $order_info['total'] - $p_tax;
-    }
-
-    $i = 0;
-    $p_description = "";
-    foreach ($order_info['products'] as $k => $v) {
-        $i++;
-        $p_description .= $v['product'];
-
-        if($i != count($order_info['products'])) {
-            $p_description .= "; ";
-        }
-    }
-
-    $type_checkout = $order_info['payment_method']['processor_params']['p_type_checkout'];
-    if($type_checkout == "TRUE"){
-        $type_checkout_mode = "true";
-    }else{
-        $type_checkout_mode = "false";
-    }
-
-    $formattedData = array(
-        'key' =>  $order_info['payment_method']['processor_params']['p_public_key'],
-        'test' => $order_info['payment_method']['processor_params']['p_test_request'],
-        'order_id' => $order_id,
-        'currency' => $order_info['secondary_currency'],
-        'total' => $order_info['total'],
-        'tax' => $p_tax,
-        'sub_total' => $p_amount_base,
-        'country' => $order_info["b_country"],
-        'external' => $type_checkout_mode,
-        'lang' => $order_info["lang_code"]
-    );
-    $queryParams = http_build_query($formattedData);
-    $id_page = "201";
-    $url_checkout = fn_url("pages.view&page_id=".$id_page."&");
-    header('Location: '.$url_checkout."?".$queryParams);
-    
+    // This function has been deprecated.
+    // Payment redirects are now handled by Omnipay in epayco.php
+    return true;
 }
 
 function fn_epayco_prepare_checkout_payment_methods(&$cart, &$auth, &$payment_groups)
@@ -175,7 +112,7 @@ function fn_epayco_is_user_exists_post($user_id, $user_data, &$is_exist)
     $orders_list = array();
     if (!empty(Tygh::$app['session']['cart']['processed_order_id'])) {
         $order_id = array_merge($orders_list, (array)Tygh::$app['session']['cart']['processed_order_id']);
-        fn_epayco_order_total_is_correct($order_id[0]);
+        // Removed fn_epayco_order_total_is_correct() call - Omnipay handles redirects
     }
 
 }
@@ -202,3 +139,165 @@ function fn_epayco_checkout_place_orders_pre_route(&$cart, $auth, $params)
         exit;
     }
 }
+
+
+
+/**
+ * Checks if Epayco IPN for the order is received by searching for the IPN receiving time
+ * in the order's payment information.
+ *
+ * @param int $order_id The identifier of the order.
+ *
+ * @return bool True if IPN was received
+ */
+function fn_is_epayco_ipn_received($order_id)
+{
+    $order_info = fn_get_order_info($order_id);
+
+    return $order_info['payment_method']['payment'] == "ePayco";
+}
+
+/**
+ * Updates add-on settings.
+ *
+ * @param array<string, string|array> $settings      Add-on settings
+ * @param int|null                    $storefront_id Storefront ID to set settings for
+ *
+ * @psalm-param array{
+ *   pp_logo_update_all_storefronts?: string,
+ *   pp_statuses?: array<string>|string,
+ * } $settings
+ *
+ * @internal
+ */
+function fn_update_epayco_settings(array $settings, $storefront_id = null)
+{
+    if (isset($settings['pp_statuses'])) {
+        $settings['pp_statuses'] = serialize($settings['pp_statuses']);
+    }
+
+    $settings_manager = Settings::instance(['storefront_id' => $storefront_id]);
+    foreach ($settings as $setting_name => $setting_value) {
+        $settings_manager->updateValue($setting_name, $setting_value);
+    }
+
+    if (
+        isset($settings['pp_logo_update_all_storefronts'])
+        && YesNo::toBool($settings['pp_logo_update_all_storefronts'])
+    ) {
+        list($storefronts,) = StorefrontProvider::getRepository()->find();
+        foreach ($storefronts as $storefront) {
+            fn_delete_image_pairs($storefront->storefront_id, 'epayco_logo');
+        }
+    }
+
+    fn_attach_image_pairs('epayco_logo', 'epayco_logo', (int) $storefront_id);
+}
+
+/**
+ * Gets add-on settings.
+ *
+ * @param int|null $storefront_id Storefront to get settings for
+ *
+ * @return array<string, string|array>
+ *
+ * @psalm-return array{
+ *   main_pair: array{
+ *     pair_id: int,
+ *     object_id: int,
+ *     detailed: array{
+ *       object_id: int,
+ *     },
+ *   }|array<empty, empty>,
+ *   pp_statuses: array<string, string>,
+ *   partial_refund_action: string,
+ *   override_customer_info: string,
+ * }
+ *
+ * @internal
+ */
+function fn_get_epayco_settings($storefront_id = null)
+{
+    /**
+     * @psalm-var array{
+     *   main_pair: array{
+     *     pair_id: int,
+     *     object_id: int,
+     *     detailed: array{
+     *       object_id: int,
+     *     },
+     *   },
+     *   pp_statuses: string,
+     *   partial_refund_action: string,
+     *   override_customer_info: string,
+     * } $pp_settings
+     */
+    $pp_settings = Settings::instance()->getValues('epayco', 'ADDON', false);
+    if (!empty($pp_settings['pp_statuses'])) {
+        $pp_settings['pp_statuses'] = unserialize($pp_settings['pp_statuses']);
+    } else {
+        $pp_settings['pp_statuses'] = [];
+    }
+
+    if (!$storefront_id && SiteArea::isStorefront(AREA)) {
+        $storefront_id = StorefrontProvider::getStorefront()->storefront_id;
+    }
+
+    $pp_settings['main_pair'] = fn_get_image_pairs((int) $storefront_id, 'epayco_logo', ImagePairTypes::MAIN, false, true);
+    if (!$pp_settings['main_pair']) {
+        $fallback_logo = fn_get_image_pairs(0, 'epayco_logo', 'M', false, true);
+        if ($fallback_logo) {
+            $fallback_logo['pair_id'] = 0;
+            $fallback_logo['object_id'] = $storefront_id;
+            $fallback_logo['detailed']['object_id'] = $storefront_id;
+        }
+        $pp_settings['main_pair'] = $fallback_logo;
+    }
+
+    /**
+     * @psalm-var array{
+     *   main_pair: array{
+     *     pair_id: int,
+     *     object_id: int,
+     *     detailed: array{
+     *       object_id: int,
+     *     },
+     *   }|array<empty, empty>,
+     *   pp_statuses: array<string, string>,
+     *   partial_refund_action: string,
+     *   override_customer_info: string,
+     * } $pp_settings
+     */
+
+    return $pp_settings;
+}
+
+
+
+
+function fn_pp_save_mode($order_info)
+{
+    $data['pp_mode'] = 'test';
+    if (!empty($order_info['payment_method']) && !empty($order_info['payment_method']['processor_params']) && !empty($order_info['payment_method']['processor_params']['mode'])) {
+        $data['pp_mode'] = $order_info['payment_method']['processor_params']['mode'];
+    }
+    fn_update_order_payment_info($order_info['order_id'], $data);
+
+    return true;
+}
+
+/**
+ * Checks if payment processor is the one provided by the add-on.
+ *
+ * @param int $processor_id
+ *
+ * @return bool True if processor is epayco-based
+ */
+function fn_is_epayco_processor($processor_id = 0)
+{
+    return (bool) db_get_field("SELECT 1 FROM ?:payment_processors WHERE processor_id = ?i AND addon = ?s", $processor_id, 'epayco');
+}
+
+
+
+
